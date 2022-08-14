@@ -1,1 +1,17 @@
 
+<head>
+        <title>JS13KGame</title>
+        <link rel="stylesheet" href="styles/style.css">    
+</head>
+<canvas id="canvas"></canvas>
+<script>
+    let canvas = document.getElementById("canvas")
+    let ctx = canvas.getContext("2d")
+    canvas.width = window.innerWidth
+    canvas.height = window.innerHeight
+</script>
+<script src="src/mazeGeneration.js"></script>
+<script src="src/minotaurAI.js"></script>
+<script src="src/playerAI.js"></script>
+<script src="src/controls.js"></script>
+<script src="src/index.js"></script>
