@@ -1,11 +1,19 @@
+///////////////////////////////
+////Handles Map Generation/////
+///////////////////////////////
+
+
+//Arrays for maze
 let cells = []
 let groups = []
 let edges = []
 
+//map demensions
 let mapSize = 30
 let tileSize = 30
 
 
+//cell class (this will basically control everything that is static)
 class Cell{
     constructor(i,j,group){
         this.i = i //x
