@@ -44,7 +44,6 @@ class Cell{
 
         if(neighbour.group != this.group){
             this.edges[side] = 0
-            neighbour.edges[side+2] = 0
             edges.splice(edge,1)
             this.delete(neighbour)
             return
