@@ -1,12 +1,19 @@
 <link rel="stylesheet" href="styles/style.css">
 <canvas id="canvas"></canvas>
 <canvas id="graphics"></canvas>
+
 <script>
     let canvas = document.getElementById("canvas")
     let ctx = canvas.getContext("2d")
-    canvas.width = window.innerWidth
-    canvas.height = window.innerHeight
+
+
+    window.onresize = () => {
+        canvas.width = canvas.height = window.innerHeight > window.innerWidth ? window.innerWidth : window.innerHeight
+    }
+
+    onresize()
 </script>
+
 <script src="src/mazeGeneration.js"></script>
 <script src="src/minotaurAI.js"></script>
 <script src="src/playerAI.js"></script>

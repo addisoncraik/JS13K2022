@@ -11,9 +11,11 @@ class character {
 
     }
 }
+
+
 let player = {
-    x: 0,
-    y: 0,
+    x: canvas.width/2-5,
+    y: canvas.height/2-5,
     width: 10,
     height: 10,
     health: 3,
