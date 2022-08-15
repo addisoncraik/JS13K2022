@@ -4,7 +4,8 @@
 
 /* 
 -Movement (Lets start making this playable)
--Player class
+-Player clas
+-collidable walls
 -NPC class (we'll need to figure out some A* stuff)
 -Minotaur AI / Class (dont worry about making him playable rn)
 -Sword components
