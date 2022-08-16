@@ -3,11 +3,14 @@
 ///////////////////////
 
 /* 
--Movement (Lets start making this playable)
--Player clas
--collidable walls
+-collidable walls, almost done, just need to figure out the side collisons on top and bottom walls
+
 -NPC class (we'll need to figure out some A* stuff)
+    -also walk in random direction, unless the minotaur is after them.
 -Minotaur AI / Class (dont worry about making him playable rn)
+    -idea for now: 
+    -walks in a random directions until he picks up a scent or sees someone and begins chasing once detected.
+    -players have a scent associated with them.
 -Sword components
 -Win Condition / lose Condition
 
@@ -44,9 +47,9 @@ let updateInterval;
 const frameRate = 60;
 
 window.onload = () => {
-    console.log('hi')
-    //window.requestAnimationFrame(drawCanvas)
+    //drawCanvas();
     drawInterval = setInterval(drawCanvas,1000/frameRate)
+    updateInterval = setInterval(update,1000/frameRate)
 }
 window.addEventListener("keydown",keyPress)
 window.addEventListener("keyup",keyUp)
@@ -63,4 +66,12 @@ function drawCanvas() {
     player.y += player.yVelU;
     drawMap()
     player.draw()
-} 
+    //window.requestAnimationFrame(drawCanvas)
+}
+function update() {
+    for(let i = 0; i < map.size; i++){
+        for(let j = 0; j < map.size; j++){
+            cells[i][j].collision()
+        }
+    }
+}

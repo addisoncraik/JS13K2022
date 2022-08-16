@@ -11,10 +11,11 @@ let edges = []
 
 //map object
 let map = {
-    ts:20,
-    size:30,
+    ts:250,
+    size:2,
     x:canvas.width/2 - 30/2*20,
     y:canvas.height/2 - 30/2*20,
+    ws:15,
 }
 
 
@@ -34,11 +35,12 @@ class Cell{
     //draw stuff
     draw(){
         for(let i = 0; i<this.edges.length; i++){
+            ctx.strokeRect(this.x-map.ts/2,this.y-map.ts/2,map.ts,map.ts)
             ctx.save()
             ctx.translate(map.x+this.i*map.ts+map.ts/2, map.y+this.j*map.ts+map.ts/2)
             ctx.rotate(i*(Math.PI/2))
             if(this.edges[i]){
-                ctx.fillRect(-map.ts/2,-map.ts/2,map.ts,1)
+                ctx.fillRect(-map.ts/2,-map.ts/2,map.ts,map.ws)
             }
             ctx.restore()
         }
@@ -69,6 +71,72 @@ class Cell{
             return
         }
     }
+    collision () {
+        for (let i = 0; i<edges.length;i++) {
+  
+            if (this.edges[3]) { // left side
+                
+                collisionWall(player,this, "left");
+            } 
+            if (this.edges[1]) { // right side
+                collisionWall(player,this,"right")
+                
+            }
+
+            if (this.edges[0]) { // top
+                collisionWall(player,this,"top")
+                
+            }
+            if (this.edges[2]) { // bottom
+                collisionWall(player,this,"bot")
+               
+            }
+        }
+    }
+}
+function collisionWall(entity, wall,side) {
+    if(side == "left") {
+    if (entity.x+entity.width > wall.x-map.ts/2 && entity.x < wall.x-map.ts/2 && entity.y +entity.height/2 > wall.y-map.ts/2 && entity.y + entity.height/2 < wall.y+map.ts/2) { // left side
+        entity.x = wall.x-map.ts/2-entity.width;
+    } else if (entity.x+entity.width > wall.x-map.ts/2+map.ws && entity.x < wall.x-map.ts/2+map.ws && entity.y +entity.height/2 > wall.y-map.ts/2 && entity.y + entity.height/2 < wall.y+map.ts/2) { // right side
+        entity.x = wall.x-map.ts/2+map.ws;
+    } else if (entity.x+entity.width > wall.x-map.ts/2 && entity.x < wall.x-map.ts/2+map.ws && entity.y + entity.height > wall.y-map.ts/2 && entity.y < wall.y-map.ts/2+map.ws) { // top side
+        entity.y = wall.y-map.ts/2-entity.height;
+    }  else if (entity.x+entity.width > wall.x-map.ts/2 && entity.x < wall.x-map.ts/2+map.ws && entity.y + entity.height > wall.y+map.ts/2 && entity.y < wall.y+map.ts/2) { // bottom
+        entity.y = wall.y+map.ts/2;
+    }
+} else if (side == "right") {
+    if (entity.x+entity.width > wall.x+map.ts/2 && entity.x < wall.x+map.ts/2 && entity.y +entity.height/2 > wall.y-map.ts/2 && entity.y + entity.height/2 < wall.y+map.ts/2) { // left side
+        entity.x = wall.x+map.ts/2
+    } else if (entity.x+entity.width > wall.x+map.ts/2-map.ws && entity.x < wall.x+map.ts/2-map.ws && entity.y +entity.height/2 > wall.y-map.ts/2 && entity.y + entity.height/2 < wall.y+map.ts/2) { // right side
+        entity.x = wall.x+map.ts/2-map.ws-entity.width;
+    } else if (entity.x+entity.width > wall.x-map.ts/2 && entity.x < wall.x-map.ts/2+map.ws && entity.y + entity.height > wall.y-map.ts/2 && entity.y < wall.y-map.ts/2+map.ws) { // top side
+        entity.y = wall.y-map.ts/2-entity.height;
+    }  else if (entity.x+entity.width > wall.x-map.ts/2 && entity.x < wall.x-map.ts/2+map.ws && entity.y + entity.height > wall.y+map.ts/2 && entity.y < wall.y+map.ts/2) { // bottom
+        entity.y = wall.y+map.ts/2;
+    }
+} else if (side== "top") {
+    if (entity.x+entity.width > wall.x-map.ts/2 && entity.x < wall.x+map.ts/2 && entity.y + entity.height > wall.y-map.ts/2 && entity.y < wall.y-map.ts/2) { // top side
+        entity.y = wall.y-map.ts/2-entity.height;
+    } else if (entity.x+entity.width > wall.x-map.ts/2 && entity.x < wall.x+map.ts/2 && entity.y + entity.height > wall.y-map.ts/2+map.ws && entity.y < wall.y-map.ts/2+map.ws) { // bottom
+        entity.y = wall.y-map.ts/2+map.ws;
+    }/* else if (entity.x + entity.width > wall.x-map.ts/2 && entity.x < wall.x-map.ts/2 && entity.y + entity.height/2 > wall.y-map.ts/2 && entity.y + entity.height/2 < wall.y-map.ts/2+map.ws) {
+        entity.x = wall.x-map.ts/2-entity.width;
+        console.log('yes')
+    } else if (entity.x + entity.width > wall.x+map.ts/2 && entity.x < wall.x-map.ts && entity.y + entity.height/2 > wall.y-map.ts/2 && entity.y + entity.height/2 < wall.y-map.ts/2+map.ws) {
+        entity.x = wall.x+map.ts/2;
+    }*/
+} else if (side == "bot") {
+    if (entity.x+entity.width > wall.x-map.ts/2 && entity.x < wall.x+map.ts/2 && entity.y + entity.height > wall.y+map.ts/2-map.ws && entity.y < wall.y+map.ts/2-map.ws) { // top side
+        entity.y = wall.y+map.ts/2-map.ws-entity.height;
+    } else if (entity.x+entity.width > wall.x-map.ts/2 && entity.x < wall.x+map.ts/2 && entity.y + entity.height > wall.y+map.ts/2 && entity.y < wall.y+map.ts/2) { // bottom
+        entity.y = wall.y+map.ts/2;
+    } /*else if (entity.x + entity.width > wall.x-map.ts/2 && entity.x < wall.x-map.ts && entity.y + entity.height/2 > wall.y-map.ts/2 && entity.y + entity.height/2 < wall.y-map.ts/2+map.ws) {
+        entity.x = wall.x-map.ts/2-entity.width;
+    } else if (entity.x + entity.width > wall.x+map.ts/2 && entity.x < wall.x-map.ts && entity.y + entity.height/2 > wall.y-map.ts/2 && entity.y + entity.height/2 < wall.y-map.ts/2+map.ws) {
+        entity.x = wall.x+map.ts/2;
+    }*/
+}
 }
 
 /////////////////
@@ -119,10 +187,10 @@ removeWall()
 //Carve Rooms//
 
 //Minotaur room radius (cells)
-let mRoomR = 3
+let mRoomR = 0
 
 //Treasure room radius (cells)
-let tRoomR = 2
+let tRoomR = 0
 
 for(let i = 0; i < map.size; i++){
     for(let j = 0; j < map.size; j++){

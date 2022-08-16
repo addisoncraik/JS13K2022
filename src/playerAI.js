@@ -16,8 +16,8 @@ class character {
 let player = {
     x: canvas.width/2-5,
     y: canvas.height/2-5,
-    width: 10,
-    height: 10,
+    width: 20,
+    height: 40,
     xVelR: 0,
     xVelL: 0,
     yVelU: 0,
