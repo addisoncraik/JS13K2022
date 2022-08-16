@@ -1,16 +1,22 @@
 function keyPress (event) {
     if (event.keyCode == 87) {
-        console.log('w')
+        player.yVelU = -2;
     }
     if (event.keyCode == 65) {
-        console.log('a') 
+        player.xVelR = -2;
     }
     if (event.keyCode== 83) {
-        console.log('s')
+        player.yVelD = 2;
     }
     if (event.keyCode == 68) {
-        console.log('d')
+        player.xVelL = 2;
     }
+}
+function keyUp(event) {
+    if (event.keyCode == 87) player.yVelU = 0 ;
+    if (event.keyCode == 65) player.xVelR = 0;
+    if (event.keyCode== 83) player.yVelD = 0;
+    if (event.keyCode == 68) player.xVelL = 0;
 }
 //w is 87
 //a is 65 

@@ -45,14 +45,22 @@ const frameRate = 60;
 
 window.onload = () => {
     console.log('hi')
-    drawInterval = setInterval(drawCanvas(),1000/frameRate)
+    //window.requestAnimationFrame(drawCanvas)
+    drawInterval = setInterval(drawCanvas,1000/frameRate)
 }
-
-
 window.addEventListener("keydown",keyPress)
+window.addEventListener("keyup",keyUp)
 
 
 
 function drawCanvas() {
+    gfx.color = "white";
+    gfx.clearRect(0,0,canv.width,canv.height)
+    // this should go in a seperate update function
+    player.x += player.xVelR;
+    player.x += player.xVelL;
+    player.y += player.yVelD
+    player.y += player.yVelU;
+    drawMap()
     player.draw()
 } 

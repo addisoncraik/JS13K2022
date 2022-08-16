@@ -18,6 +18,10 @@ let player = {
     y: canvas.height/2-5,
     width: 10,
     height: 10,
+    xVelR: 0,
+    xVelL: 0,
+    yVelU: 0,
+    yVelD: 0,
     health: 3,
     draw () {
         ctx.fillRect(this.x,this.y,this.width,this.height)
