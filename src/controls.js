@@ -1,22 +1,22 @@
 function keyPress (event) {
     if (event.keyCode == 87) {
-        player.yVelU = -2;
+        player.up = true;
     }
     if (event.keyCode == 65) {
-        player.xVelR = -2;
+        player.left = true;
     }
     if (event.keyCode== 83) {
-        player.yVelD = 2;
+        player.down = true;
     }
     if (event.keyCode == 68) {
-        player.xVelL = 2;
+        player.right = true;
     }
 }
 function keyUp(event) {
-    if (event.keyCode == 87) player.yVelU = 0 ;
-    if (event.keyCode == 65) player.xVelR = 0;
-    if (event.keyCode== 83) player.yVelD = 0;
-    if (event.keyCode == 68) player.xVelL = 0;
+    if (event.keyCode == 87) player.up = false;
+    if (event.keyCode == 65) player.left = false;
+    if (event.keyCode== 83) player.down = false;
+    if (event.keyCode == 68) player.right = false;
 }
 //w is 87
 //a is 65 

@@ -94,49 +94,10 @@ class Cell{
         }
     }
 }
+
+
 function collisionWall(entity, wall,side) {
-    if(side == "left") {
-    if (entity.x+entity.width > wall.x-map.ts/2 && entity.x < wall.x-map.ts/2 && entity.y +entity.height/2 > wall.y-map.ts/2 && entity.y + entity.height/2 < wall.y+map.ts/2) { // left side
-        entity.x = wall.x-map.ts/2-entity.width;
-    } else if (entity.x+entity.width > wall.x-map.ts/2+map.ws && entity.x < wall.x-map.ts/2+map.ws && entity.y +entity.height/2 > wall.y-map.ts/2 && entity.y + entity.height/2 < wall.y+map.ts/2) { // right side
-        entity.x = wall.x-map.ts/2+map.ws;
-    } else if (entity.x+entity.width > wall.x-map.ts/2 && entity.x < wall.x-map.ts/2+map.ws && entity.y + entity.height > wall.y-map.ts/2 && entity.y < wall.y-map.ts/2+map.ws) { // top side
-        entity.y = wall.y-map.ts/2-entity.height;
-    }  else if (entity.x+entity.width > wall.x-map.ts/2 && entity.x < wall.x-map.ts/2+map.ws && entity.y + entity.height > wall.y+map.ts/2 && entity.y < wall.y+map.ts/2) { // bottom
-        entity.y = wall.y+map.ts/2;
-    }
-} else if (side == "right") {
-    if (entity.x+entity.width > wall.x+map.ts/2 && entity.x < wall.x+map.ts/2 && entity.y +entity.height/2 > wall.y-map.ts/2 && entity.y + entity.height/2 < wall.y+map.ts/2) { // left side
-        entity.x = wall.x+map.ts/2
-    } else if (entity.x+entity.width > wall.x+map.ts/2-map.ws && entity.x < wall.x+map.ts/2-map.ws && entity.y +entity.height/2 > wall.y-map.ts/2 && entity.y + entity.height/2 < wall.y+map.ts/2) { // right side
-        entity.x = wall.x+map.ts/2-map.ws-entity.width;
-    } else if (entity.x+entity.width > wall.x-map.ts/2 && entity.x < wall.x-map.ts/2+map.ws && entity.y + entity.height > wall.y-map.ts/2 && entity.y < wall.y-map.ts/2+map.ws) { // top side
-        entity.y = wall.y-map.ts/2-entity.height;
-    }  else if (entity.x+entity.width > wall.x-map.ts/2 && entity.x < wall.x-map.ts/2+map.ws && entity.y + entity.height > wall.y+map.ts/2 && entity.y < wall.y+map.ts/2) { // bottom
-        entity.y = wall.y+map.ts/2;
-    }
-} else if (side== "top") {
-    if (entity.x+entity.width > wall.x-map.ts/2 && entity.x < wall.x+map.ts/2 && entity.y + entity.height > wall.y-map.ts/2 && entity.y < wall.y-map.ts/2) { // top side
-        entity.y = wall.y-map.ts/2-entity.height;
-    } else if (entity.x+entity.width > wall.x-map.ts/2 && entity.x < wall.x+map.ts/2 && entity.y + entity.height > wall.y-map.ts/2+map.ws && entity.y < wall.y-map.ts/2+map.ws) { // bottom
-        entity.y = wall.y-map.ts/2+map.ws;
-    }/* else if (entity.x + entity.width > wall.x-map.ts/2 && entity.x < wall.x-map.ts/2 && entity.y + entity.height/2 > wall.y-map.ts/2 && entity.y + entity.height/2 < wall.y-map.ts/2+map.ws) {
-        entity.x = wall.x-map.ts/2-entity.width;
-        console.log('yes')
-    } else if (entity.x + entity.width > wall.x+map.ts/2 && entity.x < wall.x-map.ts && entity.y + entity.height/2 > wall.y-map.ts/2 && entity.y + entity.height/2 < wall.y-map.ts/2+map.ws) {
-        entity.x = wall.x+map.ts/2;
-    }*/
-} else if (side == "bot") {
-    if (entity.x+entity.width > wall.x-map.ts/2 && entity.x < wall.x+map.ts/2 && entity.y + entity.height > wall.y+map.ts/2-map.ws && entity.y < wall.y+map.ts/2-map.ws) { // top side
-        entity.y = wall.y+map.ts/2-map.ws-entity.height;
-    } else if (entity.x+entity.width > wall.x-map.ts/2 && entity.x < wall.x+map.ts/2 && entity.y + entity.height > wall.y+map.ts/2 && entity.y < wall.y+map.ts/2) { // bottom
-        entity.y = wall.y+map.ts/2;
-    } /*else if (entity.x + entity.width > wall.x-map.ts/2 && entity.x < wall.x-map.ts && entity.y + entity.height/2 > wall.y-map.ts/2 && entity.y + entity.height/2 < wall.y-map.ts/2+map.ws) {
-        entity.x = wall.x-map.ts/2-entity.width;
-    } else if (entity.x + entity.width > wall.x+map.ts/2 && entity.x < wall.x-map.ts && entity.y + entity.height/2 > wall.y-map.ts/2 && entity.y + entity.height/2 < wall.y-map.ts/2+map.ws) {
-        entity.x = wall.x+map.ts/2;
-    }*/
-}
+
 }
 
 /////////////////

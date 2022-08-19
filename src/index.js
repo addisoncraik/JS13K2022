@@ -60,15 +60,13 @@ function drawCanvas() {
     gfx.color = "white";
     gfx.clearRect(0,0,canv.width,canv.height)
     // this should go in a seperate update function
-    player.x += player.xVelR;
-    player.x += player.xVelL;
-    player.y += player.yVelD
-    player.y += player.yVelU;
     drawMap()
     player.draw()
     //window.requestAnimationFrame(drawCanvas)
 }
 function update() {
+    player.move()
+
     for(let i = 0; i < map.size; i++){
         for(let j = 0; j < map.size; j++){
             cells[i][j].collision()
