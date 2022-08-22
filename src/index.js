@@ -66,10 +66,4 @@ function drawCanvas() {
 }
 function update() {
     player.move()
-
-    for(let i = 0; i < map.size; i++){
-        for(let j = 0; j < map.size; j++){
-            cells[i][j].collision()
-        }
-    }
 }

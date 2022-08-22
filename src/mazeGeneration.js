@@ -12,10 +12,10 @@ let edges = []
 //map object
 let map = {
     ts:250,
-    size:2,
-    x:canvas.width/2 - 30/2*20,
-    y:canvas.height/2 - 30/2*20,
-    ws:15,
+    size:30,
+    x:canvas.width/2 - 15*250,
+    y:canvas.height/2 - 15*250,
+    ws:25,
 }
 
 
@@ -24,8 +24,8 @@ class Cell{
     constructor(i,j,group){
         this.i = i //x
         this.j = j //y
-        this.x = map.x+this.i*map.ts+map.ts/2 //x
-        this.y = map.y+this.j*map.ts+map.ts/2 //y
+        this.x = this.i*map.ts+map.ts/2 //x
+        this.y = this.j*map.ts+map.ts/2 //y
 
         this.group = group
         this.edges = [1,1,0,0] //t,r,b,l
@@ -35,11 +35,11 @@ class Cell{
     //draw stuff
     draw(){
         for(let i = 0; i<this.edges.length; i++){
-            ctx.strokeRect(this.x-map.ts/2,this.y-map.ts/2,map.ts,map.ts)
             ctx.save()
             ctx.translate(map.x+this.i*map.ts+map.ts/2, map.y+this.j*map.ts+map.ts/2)
             ctx.rotate(i*(Math.PI/2))
             if(this.edges[i]){
+                ctx.fillStyle = "black"
                 ctx.fillRect(-map.ts/2,-map.ts/2,map.ts,map.ws)
             }
             ctx.restore()
@@ -71,33 +71,103 @@ class Cell{
             return
         }
     }
-    collision () {
-        for (let i = 0; i<edges.length;i++) {
-  
-            if (this.edges[3]) { // left side
-                
-                collisionWall(player,this, "left");
-            } 
-            if (this.edges[1]) { // right side
-                collisionWall(player,this,"right")
-                
-            }
 
-            if (this.edges[0]) { // top
-                collisionWall(player,this,"top")
-                
-            }
-            if (this.edges[2]) { // bottom
-                collisionWall(player,this,"bot")
-               
-            }
+    collision () {
+        this.x = this.i*map.ts+map.ts/2 //x
+        this.y = this.j*map.ts+map.ts/2 //y
+
+        let pos = [[this.x-map.ts/2,this.y-map.ts/2],[this.x+map.ts/2-map.ws,this.y-map.ts/2],[this.x-map.ts/2,this.y+map.ts/2-map.ws],[this.x-map.ts/2,this.y-map.ts/2]]
+        let dimensions = [[map.ts,map.ws],[map.ws,map.ts]]
+
+        if(this.edges[1] && cells[this.i+1][this.j+1].edges[0]){
+            dimensions[1][1]+=map.ws
+        }
+
+        for (let i = 0; i<this.edges.length;i++) {
+            if (this.edges[i] == 1) {
+                collision(player,pos[i],dimensions[i%2]);
+            } 
         }
     }
 }
 
 
-function collisionWall(entity, wall,side) {
+function collision(object, wallP, wallD) {
 
+    ctx.strokeStyle = "red"
+    ctx.strokeRect(map.x+wallP[0],map.y+wallP[1],wallD[0],wallD[1])
+    ctx.strokeRect(map.x+object.oldX,map.y+object.oldY,20,40)
+    ctx.strokeStyle = "black"
+
+    //moving right
+
+    if(object.x - object.oldX > 0){
+        
+
+        if(object.x + object.width > wallP[0] && object.oldX + object.width <= wallP[0] && object.y+object.height > wallP[1] && object.y+object.height < wallP[1]+wallD[1]){
+
+            object.xVel = 0;
+            object.x = object.oldX = wallP[0] - object.width - 0.01;
+
+            map.x = object.cX-object.x
+            map.y = object.cY-object.y
+
+            
+            return;
+        }
+
+    }
+    
+    //moving left
+    if (object.x - object.oldX < 0) {
+
+        let right = wallP[0]+wallD[0]
+
+        if (object.x < right && object.oldX >= right && object.y+object.height > wallP[1] && object.y+object.height < wallP[1]+wallD[1]) {
+
+            object.xVel = 0;
+            object.oldX = object.x = right + 0.01;
+            map.x = object.cX-object.x
+            map.y = object.cY-object.y
+
+            return;
+
+        }
+
+    }
+
+    //moving up
+    if (object.y - object.oldY < 0 && ((object.x+object.width > wallP[0] && object.x+object.width < wallP[0]+wallD[0]) || (object.x > wallP[0] && object.x < wallP[0]+wallD[0]))) {
+
+        let bottom = wallP[1]+wallD[1];
+
+        if(object.y+object.height < bottom && object.oldY+object.height >= bottom){
+
+            object.yVel = 0;
+            object.oldY = object.y = bottom - object.height + 0.01;
+            map.x = object.cX-object.x
+            map.y = object.cY-object.y
+
+            return
+        }
+
+    }
+      
+    //moving down
+    if (object.y - object.oldY > 0) {
+
+        if (object.y+object.height > wallP[1] && object.oldY+object.height <= wallP[1] && ((object.x+object.width > wallP[0] && object.x+object.width < wallP[0]+wallD[0]) || (object.x > wallP[0] && object.x < wallP[0]+wallD[0]))) {
+
+            object.yVel = 0;
+            object.oldY = object.y = wallP[1] - object.height - 0.01;
+            map.x = object.cX-object.x
+            map.y = object.cY-object.y
+
+            return
+
+        }
+
+    }
 }
 
 /////////////////
@@ -148,10 +218,10 @@ removeWall()
 //Carve Rooms//
 
 //Minotaur room radius (cells)
-let mRoomR = 0
+let mRoomR = 2
 
 //Treasure room radius (cells)
-let tRoomR = 0
+let tRoomR = 1
 
 for(let i = 0; i < map.size; i++){
     for(let j = 0; j < map.size; j++){
