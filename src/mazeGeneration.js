@@ -11,11 +11,11 @@ let edges = []
 
 //map object
 let map = {
-    ts:250,
-    size:30,
-    x:canvas.width/2 - 15*250,
-    y:canvas.height/2 - 15*250,
-    ws:25,
+    ts:263,
+    size:20,
+    x:canvas.width/2 - 270,//*15,
+    y:canvas.height/2 - 270,//*15,
+    ws:45,
 }
 
 
@@ -24,25 +24,61 @@ class Cell{
     constructor(i,j,group){
         this.i = i //x
         this.j = j //y
-        this.x = this.i*map.ts+map.ts/2 //x
-        this.y = this.j*map.ts+map.ts/2 //y
+        this.x = this.i*map.ts //x
+        this.y = this.j*map.ts //y
+
+        this.pattern = randInt(5)
+
+        this.alpha = 1
 
         this.group = group
         this.edges = [1,1,0,0] //t,r,b,l
     }
 
-
     //draw stuff
-    draw(){
-        for(let i = 0; i<this.edges.length; i++){
-            ctx.save()
-            ctx.translate(map.x+this.i*map.ts+map.ts/2, map.y+this.j*map.ts+map.ts/2)
-            ctx.rotate(i*(Math.PI/2))
-            if(this.edges[i]){
-                ctx.fillStyle = "black"
-                ctx.fillRect(-map.ts/2,-map.ts/2,map.ts,map.ws)
+    drawW(pos,d,e){
+        if(Math.floor((player.y+player.height)/map.ts) == this.j-1 && this.i == Math.floor((player.x+player.width/2)/map.ts)){
+            this.alpha -= 0.02
+        }else if(this.alpha < 1){
+            this.alpha += 0.02
+        }
+
+        if(e == 0){
+            ctx.fillStyle = "#3e3e3e"
+            ctx.fillRect(map.x+pos[0],map.y+pos[1],d[0],d[1])
+
+            if(this.alpha < 0.3){
+                this.alpha = 0.3
             }
-            ctx.restore()
+
+            ctx.globalAlpha = this.alpha
+        }
+        
+
+        if(e == 0 || e == 2){
+            for(let i = pos[0]-1; i < pos[0]+d[0]; i+=44){
+                draw(5,map.x+i,map.y+pos[1]-145)
+            }
+        }else{
+            ctx.fillStyle = "#7a2d1a"
+            ctx.fillRect(map.x+pos[0]-1,map.y+pos[1]-145,d[0]+2,d[1]-15)
+            draw(5,map.x+pos[0],map.y+pos[1]+d[1]-190)
+        }
+        ctx.globalAlpha = 1
+    }
+
+    drawF(){
+        if(this.pattern == 0){
+            draw(1,map.x+this.x+map.ws,map.y+this.y+map.ws,.5)
+        }
+        if(this.pattern == 1){
+            draw(2,map.x+this.x+map.ws,map.y+this.y+map.ws,.5)
+        }
+        if(this.pattern == 2){
+            draw(3,map.x+this.x+map.ws,map.y+this.y+map.ws,.5)
+        }
+        if(this.pattern == 3){
+            draw(4,map.x+this.x+map.ws,map.y+this.y+map.ws,.5)
         }
     }
 
@@ -72,32 +108,36 @@ class Cell{
         }
     }
 
-    collision () {
-        this.x = this.i*map.ts+map.ts/2 //x
-        this.y = this.j*map.ts+map.ts/2 //y
+    update () {
+        this.x = this.i*map.ts //x
+        this.y = this.j*map.ts //y
 
-        let pos = [[this.x-map.ts/2,this.y-map.ts/2],[this.x+map.ts/2-map.ws,this.y-map.ts/2],[this.x-map.ts/2,this.y+map.ts/2-map.ws],[this.x-map.ts/2,this.y-map.ts/2]]
-        let dimensions = [[map.ts,map.ws],[map.ws,map.ts]]
+        this.drawF()
 
-        if(this.edges[1] && cells[this.i+1][this.j+1].edges[0]){
-            dimensions[1][1]+=map.ws
+        let pos = [[this.x,this.y],[this.x+map.ts-map.ws,this.y],[this.x,this.y+map.ts-map.ws],[this.x,this.y]]
+        let dimensions = [[map.ts,map.ws],[map.ws,map.ts+map.ws]]
+
+        if(this.j == map.size-1){
+            dimensions[1][1] = map.ts
         }
 
         for (let i = 0; i<this.edges.length;i++) {
-            if (this.edges[i] == 1) {
+            if (this.edges[i]) {
                 collision(player,pos[i],dimensions[i%2]);
+                this.drawW(pos[i],dimensions[i%2],i)
             } 
+
+            if(Math.floor((player.y+player.height)/map.ts) == this.j){
+                if(i == 1){
+                    player.draw()
+                }
+            }
         }
     }
 }
 
 
 function collision(object, wallP, wallD) {
-
-    ctx.strokeStyle = "red"
-    ctx.strokeRect(map.x+wallP[0],map.y+wallP[1],wallD[0],wallD[1])
-    ctx.strokeRect(map.x+object.oldX,map.y+object.oldY,20,40)
-    ctx.strokeStyle = "black"
 
     //moving right
 
@@ -218,10 +258,10 @@ removeWall()
 //Carve Rooms//
 
 //Minotaur room radius (cells)
-let mRoomR = 2
+let mRoomR = 2.5//2
 
 //Treasure room radius (cells)
-let tRoomR = 1
+let tRoomR = 1.5//1
 
 for(let i = 0; i < map.size; i++){
     for(let j = 0; j < map.size; j++){
@@ -249,17 +289,6 @@ cells[randInt(map.size)][map.size-1].edges[2] = 0
 
 
 
-function drawMap(){
-//temporarily draws maze
-ctx.clearRect(0,0,canvas.width,canvas.height)
-for(let i = 0; i < map.size; i++){
-    for(let j = 0; j < map.size; j++){
-        cells[i][j].draw()
-    }
-}
-}
-
-drawMap()
 
 
 //distance function

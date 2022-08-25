@@ -1,24 +1,29 @@
-<head></head>
 <link rel="stylesheet" href="styles/style.css">
+<div id="v"></div>
 <canvas id="canvas"></canvas>
 <canvas id="graphics"></canvas>
-<body>
-</body>
 <script>
     let canvas = document.getElementById("canvas")
+    let v = document.getElementById("v")
     let ctx = canvas.getContext("2d")
 
 
     window.onresize = () => {
-        canvas.width = canvas.height = window.innerHeight > window.innerWidth ? window.innerWidth : window.innerHeight
+        v.style.width = v.style.height = canvas.width = canvas.height = window.innerHeight > window.innerWidth ? window.innerWidth : window.innerHeight
     }
 
     onresize()
+
+
+    javascript:(function(){var script=document.createElement('script');script.onload=function(){var stats=new Stats();document.body.appendChild(stats.dom);requestAnimationFrame(function loop(){stats.update();requestAnimationFrame(loop)});};script.src='https://mrdoob.github.io/stats.js/build/stats.min.js';document.head.appendChild(script);})()
+
 </script>
 
 <script src="src/mazeGeneration.js"></script>
+<script src="src/sword.js"></script>
 <script src="src/minotaurAI.js"></script>
 <script src="src/playerAI.js"></script>
+<script src="src/NPCAI.js"></script>
 <script src="src/controls.js"></script>
 <script src="src/graphics.js"></script>
 <script src="src/index.js"></script>

@@ -29,11 +29,17 @@ let player = {
     oldX: 0,
     oldY: 0,
 
-    width: 20,
-    height: 40,
+    width: 45,
+    height: 90,
 
     acc: 0.5,
     fric: 0.87,
+
+    attack: false,
+    lastDir: "",
+
+    canDash:true,
+    coolDown:false,
 
     xVel: 0,
     yVel: 0,
@@ -59,11 +65,11 @@ let player = {
         // this.x = toDecimal(this.x)
         // this.y = toDecimal(this.y)
 
-        if (this.down) { this.yVel += this.acc; }
+        if (this.down) { this.yVel += this.acc;}
 
-        if (this.left) { this.xVel -= this.acc; }
+        if (this.left) { this.xVel -= this.acc;this.lastDir = "left"}
 
-        if (this.right) { this.xVel += this.acc; }
+        if (this.right) { this.xVel += this.acc;this.lastDir = "right"}
 
         if (this.up) { this.yVel -= this.acc; }
 
@@ -72,22 +78,36 @@ let player = {
 
         this.xVel *= this.fric;
         this.yVel *= this.fric;
-
-        let playerI = Math.floor((this.x)/map.ts)
-        let playerJ = Math.floor((this.y)/map.ts)
-        
-        for(let i =-1; i<2; i++){
-            for(let j = -1; j<2; j++){
-                if(playerI+i >= 0 && playerJ+j >= 0 && playerI+i < map.size && playerJ+j < map.size){
-                    cells[playerI+i][playerJ+j].collision()
-                }
-            }
-        }
     },
 
     takeDamage (src) {
         if (src) {
             this.health --;
+        }
+    },
+
+    dash(){
+        if(!this.coolDown){
+            if(this.canDash == "right" && this.right){
+                this.xVel += 50
+                this.coolDown = true
+                setTimeout(()=>{this.coolDown = false},5000)
+            }
+            if(this.canDash == "left" && this.left){
+                this.xVel -= 50
+                this.coolDown = true
+                setTimeout(()=>{this.coolDown = false},5000)
+            }
+            if(this.canDash == "up" && this.up){
+                this.yVel -= 50
+                this.coolDown = true
+                setTimeout(()=>{this.coolDown = false},5000)
+            }
+            if(this.canDash == "down" && this.down){
+                this.yVel += 50
+                this.coolDown = true
+                setTimeout(()=>{this.coolDown = false},5000)
+            }
         }
     },
 }

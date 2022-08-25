@@ -7,18 +7,17 @@ body{
     margin: 0;
     padding: 0;
 
-    background: rgb(237, 237, 237);
+    background: #000;
 }
 
-#canvas{
+#canvas, #v{
     position: absolute;
     top: 50%;
     left: 50%;
     z-index: 1;
     transform: translate(-50%,-50%);
 
-
-    background: white;
+    background: #702918;
 }
 
 #graphics{
@@ -27,4 +26,11 @@ body{
     left: 0;
     display: none;
     z-index: 0;
+}
+
+#v{
+    /* width:100vw;
+    height: 100vh; */
+    background: radial-gradient(transparent, #000000c2);
+    z-index: 2;
 }

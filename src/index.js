@@ -57,13 +57,44 @@ window.addEventListener("keyup",keyUp)
 
 
 function drawCanvas() {
-    gfx.color = "white";
-    gfx.clearRect(0,0,canv.width,canv.height)
+    ctx.color = "white";
+    ctx.clearRect(0,0,canvas.width,canvas.height)
     // this should go in a seperate update function
-    drawMap()
-    player.draw()
+
+    ctx.fillStyle = "gray"
+    ctx.fillRect(map.x,map.y,map.size*map.ts,map.size*map.ts)
+
+    let playerI = Math.floor((player.x)/map.ts)
+        let playerJ = Math.floor((player.y)/map.ts)
+
+        for(let i =-100; i<100; i++){
+            for(let j = -100; j<100; j++){
+                if(playerI+j >= 0 && playerJ+i >= 0 && playerI+j < map.size && playerJ+i < map.size){
+                    cells[playerI+j][playerJ+i].update()
+                }
+            }
+        }
+
+    minotaur.draw()
+
+    for(let i = 0; i < npcs.length; i++){
+        npcs[i].draw()
+    }
+
+    for(let i = 0; i < 3; i++){
+        swords[i].draw()
+    }
     //window.requestAnimationFrame(drawCanvas)
 }
 function update() {
     player.move()
+    
+    for(let i = 0; i < 3; i++){
+        swords[i].collision()
+    }
+
+    for(let i = 0; i < npcs.length; i++){
+        npcs[i].move()
+        npcs[i].AI()
+    }
 }
