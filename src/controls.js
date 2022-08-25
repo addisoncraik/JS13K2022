@@ -22,22 +22,22 @@ function keyPress (event) {
 function keyUp(event) {
     if (event.keyCode == 87){
         player.canDash = "up"
-        setTimeout(()=>{player.canDash = 0},150)
+        setTimeout(()=>{player.canDash = 0},100)
         player.up = false;
     }
     if (event.keyCode == 65){
         player.canDash = "left"
-        setTimeout(()=>{player.canDash = 0},150)
+        setTimeout(()=>{player.canDash = 0},100)
         player.left = false;
     }
     if (event.keyCode== 83){
         player.canDash = "down"
-        setTimeout(()=>{player.canDash = 0},150)
+        setTimeout(()=>{player.canDash = 0},100)
         player.down = false;
     }
     if (event.keyCode == 68){
         player.canDash = "right"
-        setTimeout(()=>{player.canDash = 0;},150)
+        setTimeout(()=>{player.canDash = 0;},100)
         player.right = false;
     }
     if (event.keyCode == 32){
