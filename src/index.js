@@ -64,18 +64,8 @@ function drawCanvas() {
     ctx.fillStyle = "gray"
     ctx.fillRect(map.x,map.y,map.size*map.ts,map.size*map.ts)
 
-    let playerI = Math.floor((player.x)/map.ts)
-        let playerJ = Math.floor((player.y)/map.ts)
-
-        for(let i =-100; i<100; i++){
-            for(let j = -100; j<100; j++){
-                if(playerI+j >= 0 && playerJ+i >= 0 && playerI+j < map.size && playerJ+i < map.size){
-                    cells[playerI+j][playerJ+i].update()
-                }
-            }
-        }
-
     minotaur.draw()
+    key.draw()
 
     for(let i = 0; i < npcs.length; i++){
         npcs[i].draw()
@@ -88,6 +78,28 @@ function drawCanvas() {
 }
 function update() {
     player.move()
+
+        for(let i =-3; i<4; i++){
+            for(let j = -3; j<4; j++){
+                if(player.i+j >= 0 && player.j+i >= 0 && player.i+j < map.size && player.j+i < map.size){
+                    cells[player.i+j][player.j+i].update(false)
+                }
+            }
+        }
+
+        for(let i =-3; i<4; i++){
+            for(let j = -3; j<4; j++){
+                if(player.i+j >= 0 && player.i+j < map.size){
+                    if(player.j+i == map.size-1){
+                        cells[player.i+j][player.j+i].update(true)
+                    }
+                }
+            }
+        }
+
+    
+
+    key.collision()
     
     for(let i = 0; i < 3; i++){
         swords[i].collision()

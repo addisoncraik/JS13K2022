@@ -23,8 +23,11 @@ let player = {
     x: 0,
     y: 0,
 
-    cX: canvas.width/2-10,
-    cY: canvas.height/2-20,
+    i:0,
+    j:0,
+
+    cX: canvas.width/2-22.5,
+    cY: canvas.height/2-45,
 
     oldX: 0,
     oldY: 0,
@@ -58,6 +61,9 @@ let player = {
 
         this.x = this.cX-map.x
         this.y = this.cY-map.y
+
+        this.i = Math.floor((this.x+this.width/2)/map.ts)
+        this.j = Math.floor((this.y+this.height)/map.ts)
 
         // this.xVel = toDecimal(this.xVel)
         // this.yVel = toDecimal(this.yVel)

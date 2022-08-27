@@ -13,8 +13,8 @@ let edges = []
 let map = {
     ts:263,
     size:20,
-    x:canvas.width/2 - 270,//*15,
-    y:canvas.height/2 - 270,//*15,
+    x:canvas.width/2-(263*2),//*15,
+    y:canvas.height/2-(263*18),//*15,
     ws:45,
 }
 
@@ -29,7 +29,11 @@ class Cell{
 
         this.pattern = randInt(5)
 
-        this.alpha = 1
+        this.alphaT = 1
+
+        this.alphaB = 1
+
+        this.exit = null
 
         this.group = group
         this.edges = [1,1,0,0] //t,r,b,l
@@ -37,30 +41,54 @@ class Cell{
 
     //draw stuff
     drawW(pos,d,e){
-        if(Math.floor((player.y+player.height)/map.ts) == this.j-1 && this.i == Math.floor((player.x+player.width/2)/map.ts)){
-            this.alpha -= 0.02
-        }else if(this.alpha < 1){
-            this.alpha += 0.02
+        if(this.i == player.i && player.j == this.j-1){
+            this.alphaT -= 0.015            
+        }else if(this.i == player.i && player.j == this.j){
+            this.alphaB -= 0.015
+        }else if(this.alphaT < 1){
+            this.alphaT += 0.01
+        }else if(this.alphaB < 1){
+            this.alphaB += 0.01
+        }
+            
+
+        if(this.alphaT < 0.3){
+            this.alphaT = 0.3
         }
 
-        if(e == 0){
-            ctx.fillStyle = "#3e3e3e"
-            ctx.fillRect(map.x+pos[0],map.y+pos[1],d[0],d[1])
-
-            if(this.alpha < 0.3){
-                this.alpha = 0.3
-            }
-
-            ctx.globalAlpha = this.alpha
+        if(this.alphaB < 0.3){
+            this.alphaB = 0.3
         }
         
 
         if(e == 0 || e == 2){
+            ctx.fillStyle = "#3e3e3e"
+            if(this.exit == e){
+                ctx.fillRect(map.x+pos[0],map.y+pos[1]-145,d[0],d[1])
+                ctx.globalAlpha = 1
+                return
+            }
+
+            if(this.alphaT < 1 || this.alphaB < 1){
+                ctx.fillRect(map.x+pos[0],map.y+pos[1],d[0],d[1])
+            }
+
+            if(e==0){
+                ctx.globalAlpha = this.alphaT
+            }
+
+            if(e==2){
+                ctx.globalAlpha = this.alphaB
+            }
+
             for(let i = pos[0]-1; i < pos[0]+d[0]; i+=44){
                 draw(5,map.x+i,map.y+pos[1]-145)
             }
         }else{
             ctx.fillStyle = "#7a2d1a"
+            if(this.exit == e){
+                ctx.fillStyle = "#3e3e3e"
+            }
             ctx.fillRect(map.x+pos[0]-1,map.y+pos[1]-145,d[0]+2,d[1]-15)
             draw(5,map.x+pos[0],map.y+pos[1]+d[1]-190)
         }
@@ -108,11 +136,9 @@ class Cell{
         }
     }
 
-    update () {
+    update (bottom) {
         this.x = this.i*map.ts //x
         this.y = this.j*map.ts //y
-
-        this.drawF()
 
         let pos = [[this.x,this.y],[this.x+map.ts-map.ws,this.y],[this.x,this.y+map.ts-map.ws],[this.x,this.y]]
         let dimensions = [[map.ts,map.ws],[map.ws,map.ts+map.ws]]
@@ -121,14 +147,23 @@ class Cell{
             dimensions[1][1] = map.ts
         }
 
+        if(bottom && this.edges[2]){
+            this.drawW(pos[2],dimensions[0],2)
+            return
+        }
+
+        this.drawF()
+
         for (let i = 0; i<this.edges.length;i++) {
             if (this.edges[i]) {
-                collision(player,pos[i],dimensions[i%2]);
-                this.drawW(pos[i],dimensions[i%2],i)
+                collision(player,pos[i],dimensions[i%2],this.exit);
+                if(i != 2){
+                    this.drawW(pos[i],dimensions[i%2],i)
+                }
             } 
 
-            if(Math.floor((player.y+player.height)/map.ts) == this.j){
-                if(i == 1){
+            if(player.j == this.j){
+                if(i == 0){
                     player.draw()
                 }
             }
@@ -137,7 +172,7 @@ class Cell{
 }
 
 
-function collision(object, wallP, wallD) {
+function collision(object, wallP, wallD, exit) {
 
     //moving right
 
@@ -152,6 +187,11 @@ function collision(object, wallP, wallD) {
             map.x = object.cX-object.x
             map.y = object.cY-object.y
 
+            if(exit == 1 && key.collect){
+                for(let i =0; i<exitCoords.length; i++){
+                    cells[exitCoords[i][0]][exitCoords[i][1]].edges[i] = 0
+                }
+            }
             
             return;
         }
@@ -167,8 +207,16 @@ function collision(object, wallP, wallD) {
 
             object.xVel = 0;
             object.oldX = object.x = right + 0.01;
+
             map.x = object.cX-object.x
             map.y = object.cY-object.y
+
+            if(exit == 3 && key.collect){
+                console.log("test")
+                for(let i =0; i<exitCoords.length; i++){
+                    cells[exitCoords[i][0]][exitCoords[i][1]].edges[i] = 0
+                }
+            }
 
             return;
 
@@ -185,8 +233,15 @@ function collision(object, wallP, wallD) {
 
             object.yVel = 0;
             object.oldY = object.y = bottom - object.height + 0.01;
+
             map.x = object.cX-object.x
             map.y = object.cY-object.y
+
+            if(exit == 0 && key.collect){
+                for(let i =0; i<exitCoords.length; i++){
+                    cells[exitCoords[i][0]][exitCoords[i][1]].edges[i] = 0
+                }
+            }
 
             return
         }
@@ -200,8 +255,15 @@ function collision(object, wallP, wallD) {
 
             object.yVel = 0;
             object.oldY = object.y = wallP[1] - object.height - 0.01;
+
             map.x = object.cX-object.x
             map.y = object.cY-object.y
+
+            if(exit == 2 && key.collect){
+                for(let i =0; i<exitCoords.length; i++){
+                    cells[exitCoords[i][0]][exitCoords[i][1]].edges[i] = 0
+                }
+            }
 
             return
 
@@ -282,11 +344,18 @@ for(let i = 0; i < map.size; i++){
 
 //Carve Exits//
 
-cells[0][randInt(map.size)].edges[3] = 0
-cells[randInt(map.size)][0].edges[0] = 0
-cells[map.size-1][randInt(map.size)].edges[1] = 0
-cells[randInt(map.size)][map.size-1].edges[2] = 0
+let exitCoords = [
+    [randInt(map.size),0],
+    [map.size-1,randInt(map.size)],
+    [randInt(map.size),map.size-1],
+    [0,randInt(map.size)]
+]
 
+for(let i =0; i<exitCoords.length; i++){
+    cells[exitCoords[i][0]][exitCoords[i][1]].exit = i
+}
+
+findGScoresForCells()
 
 
 

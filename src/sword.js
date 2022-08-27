@@ -6,7 +6,7 @@ class Sword{
         this.y = j*map.ts
 
         this.component = c
-        this.collect = true
+        this.collect = false
         
         this.rotate = 0
         this.length = 206
@@ -48,7 +48,7 @@ class Sword{
                 }
             }
 
-            if(player.attack && this.rotate == 0){
+            if(player.attack && this.rotate == 0 && swords[0].collect && swords[1].collect && swords[2].collect){
                 if(player.lastDir == "left"){
                     this.rotate = 80
                 }else{
@@ -128,6 +128,33 @@ for(let i = 0; i < 3; i++){
     let j = randInt(sPos.length)
     swords.push(new Sword(map.size*sPos[j][0], map.size*sPos[j][1],i))
     sPos.splice(j,1)
+}
+
+
+let key = {
+    x:sPos[0][0]*map.size*map.ts,
+    y:sPos[0][1]*map.size*map.ts,
+
+    collect: false,
+    display: true,
+
+    draw(){
+        if(this.display){
+            ctx.fillStyle = "aqua"
+            ctx.fillRect(map.x+this.x,map.y+this.y,60,20)
+        }
+    },
+
+    collision(){
+        if(player.x+player.width > this.x && player.x < this.x + 60 && player.y + player.height > this.y && player.y+player.height < this.y + 20){
+            this.collect = true
+        }
+
+        if(this.collect){
+            this.x = player.x
+            this.y = player.y
+        }
+    }
 }
 
 
