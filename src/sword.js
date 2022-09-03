@@ -9,6 +9,7 @@ class Sword{
         this.collect = false
         
         this.rotate = 0
+        this.swing = true
         this.length = 206
 
         this.w
@@ -19,41 +20,48 @@ class Sword{
 
         if(player.x+player.width > this.x && player.x < this.x + 57.2 && player.y + player.height > this.y && player.y+player.height < this.y + 32){
             this.collect = true
+            player.sword = true
         }
 
         if(this.collect){
-            this.x = player.x
-            this.y = player.y
+            this.x = -10
+            this.y = 80
+
+            // if(player.lastDir == "right"){
+            //     this.x = player.x+player.width+15
+            //     this.y = player.y+80
+            // }
 
             let pX = this.x - Math.sin(this.rotate*(Math.PI/180))*this.length
             let pY = this.y - Math.cos(this.rotate*(Math.PI/180))*this.length
 
-            if(this.rotate > 0){
+            if(!this.swing){
                 this.rotate -= 4
-
-                if(this.minoCollision(this.x,this.y,pX,pY,minotaur.x,minotaur.y,minotaur.width,minotaur.height) && minotaur.canTakeDmg){
-                    minotaur.health -= 20
-                    minotaur.canTakeDmg = false
-                    setTimeout(()=>{minotaur.canTakeDmg = true},1000)
-                }
             }
 
-            if(this.rotate < 0){
-                this.rotate += 4
-
-                if(this.minoCollision(this.x,this.y,pX,pY,minotaur.x,minotaur.y,minotaur.width,minotaur.height) && minotaur.canTakeDmg){
-                    minotaur.health -= 20
-                    minotaur.canTakeDmg = false
-                    setTimeout(()=>{minotaur.canTakeDmg = true},1000)
-                }
+            if(Math.abs(this.rotate) == 104 || !player.attack){
+                this.swing = false
             }
 
-            if(player.attack && this.rotate == 0 && swords[0].collect && swords[1].collect && swords[2].collect){
-                if(player.lastDir == "left"){
-                    this.rotate = 80
-                }else{
-                    this.rotate = -80
-                }
+            if(this.rotate == 0){
+                this.swing = true
+            }
+
+            if(player.attack && this.swing && swords[0].collect && swords[1].collect && swords[2].collect){
+                this.rotate += 8
+            }
+
+            let sX = player.x-15
+            let sY = player.y+80
+
+            if(player.lastDir == "right"){
+                sX = player.x+player.width+15
+            }
+
+            if(this.minoCollision(sX,sY,pX,pY,minotaur.x,minotaur.y,minotaur.width,minotaur.height) && minotaur.canTakeDmg && this.rotate != 0){
+                minotaur.health -= 20
+                minotaur.canTakeDmg = false
+                setTimeout(()=>{minotaur.canTakeDmg = true},1000)
             }
         }
     }
@@ -73,7 +81,12 @@ class Sword{
 
     draw(){
         ctx.save()
-        ctx.translate(map.x+this.x,map.y+this.y)
+
+        if(this.collect){
+            ctx.translate(this.x,this.y)
+        }else{
+            ctx.translate(map.x+this.x,map.y+this.y)
+        }
 
         if(this.collect){
             ctx.scale(0.4,-0.4)
@@ -88,7 +101,7 @@ class Sword{
         
         if(this.component == 0){
             if(this.collect){
-                draw(6,-18,110)
+                draw(6,-18,30)
             }else{
                 draw(6,20,-120)
                 ctx.shadowBlur = 0;
@@ -101,7 +114,7 @@ class Sword{
         }
         if(this.component == 1){
             if(this.collect){
-                draw(7, -58, 25)
+                draw(7, -58, -40)
             }else{
                 draw(7,20,-50)
                 ctx.shadowBlur = 0;
@@ -111,7 +124,7 @@ class Sword{
         
         if(this.component == 2){
             if(this.collect){
-                draw(8,-12,0)
+                draw(8,-12,-65)
             }else{
                 draw(8,50,-20)
                 ctx.shadowBlur = 0;

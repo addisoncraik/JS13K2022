@@ -14,7 +14,7 @@ let map = {
     ts:263,
     size:20,
     x:canvas.width/2-(263*2),//*15,
-    y:canvas.height/2-(263*18),//*15,
+    y:canvas.height/2-(263*2),//*15,
     ws:45,
 }
 
@@ -33,6 +33,7 @@ class Cell{
 
         this.alphaB = 1
 
+        this.open = false
         this.exit = null
 
         this.group = group
@@ -42,10 +43,12 @@ class Cell{
     //draw stuff
     drawW(pos,d,e){
         if(this.i == player.i && player.j == this.j-1){
-            this.alphaT -= 0.015            
+            this.alphaT -= 0.02           
         }else if(this.i == player.i && player.j == this.j){
-            this.alphaB -= 0.015
-        }else if(this.alphaT < 1){
+            this.alphaB -= 0.02
+        }
+        
+        if(this.alphaT < 1){
             this.alphaT += 0.01
         }else if(this.alphaB < 1){
             this.alphaB += 0.01
@@ -136,7 +139,7 @@ class Cell{
         }
     }
 
-    update (bottom) {
+    update (type) {
         this.x = this.i*map.ts //x
         this.y = this.j*map.ts //y
 
@@ -147,20 +150,38 @@ class Cell{
             dimensions[1][1] = map.ts
         }
 
-        if(bottom && this.edges[2]){
+        if(type == 1 && this.edges[2]){
             this.drawW(pos[2],dimensions[0],2)
+            return
+        }
+
+        if(type == 2){
+            if(this.edges[1]){
+                this.drawW(pos[1],dimensions[1],1)
+            }
+
+            if(this.edges[3]){
+                this.drawW(pos[3],dimensions[1],3)
+            }
             return
         }
 
         this.drawF()
 
         for (let i = 0; i<this.edges.length;i++) {
-            if (this.edges[i]) {
+            if (this.edges[i] && i != this.exit) {
                 collision(player,pos[i],dimensions[i%2],this.exit);
                 if(i != 2){
                     this.drawW(pos[i],dimensions[i%2],i)
                 }
-            } 
+            }
+
+            if(!this.open && i == this.exit){
+                collision(player,pos[i],dimensions[i%2],this.exit);
+                if(i != 2){
+                    this.drawW(pos[i],dimensions[i%2],i)
+                }
+            }
 
             if(player.j == this.j){
                 if(i == 0){
@@ -189,7 +210,7 @@ function collision(object, wallP, wallD, exit) {
 
             if(exit == 1 && key.collect){
                 for(let i =0; i<exitCoords.length; i++){
-                    cells[exitCoords[i][0]][exitCoords[i][1]].edges[i] = 0
+                    cells[exitCoords[i][0]][exitCoords[i][1]].open = true
                 }
             }
             
@@ -212,9 +233,8 @@ function collision(object, wallP, wallD, exit) {
             map.y = object.cY-object.y
 
             if(exit == 3 && key.collect){
-                console.log("test")
                 for(let i =0; i<exitCoords.length; i++){
-                    cells[exitCoords[i][0]][exitCoords[i][1]].edges[i] = 0
+                    cells[exitCoords[i][0]][exitCoords[i][1]].open = true
                 }
             }
 
@@ -239,7 +259,7 @@ function collision(object, wallP, wallD, exit) {
 
             if(exit == 0 && key.collect){
                 for(let i =0; i<exitCoords.length; i++){
-                    cells[exitCoords[i][0]][exitCoords[i][1]].edges[i] = 0
+                    cells[exitCoords[i][0]][exitCoords[i][1]].open = true
                 }
             }
 
@@ -261,7 +281,7 @@ function collision(object, wallP, wallD, exit) {
 
             if(exit == 2 && key.collect){
                 for(let i =0; i<exitCoords.length; i++){
-                    cells[exitCoords[i][0]][exitCoords[i][1]].edges[i] = 0
+                    cells[exitCoords[i][0]][exitCoords[i][1]].open = true
                 }
             }
 
@@ -320,10 +340,10 @@ removeWall()
 //Carve Rooms//
 
 //Minotaur room radius (cells)
-let mRoomR = 2.5//2
+let mRoomR = 2.5
 
 //Treasure room radius (cells)
-let tRoomR = 1.5//1
+let tRoomR = 1.5
 
 for(let i = 0; i < map.size; i++){
     for(let j = 0; j < map.size; j++){

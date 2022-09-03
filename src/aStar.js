@@ -100,7 +100,7 @@ function findSurroundingCells (cell,aCells) { // finds neighbours
         }
     }
 
-    for (let i = 0;i<dirs.length;i++) {
+    for (let i = 0;i<dirs.length;i++){
         if (dirs[i] == 0) {
             neighbouringCells.push(aCells[cell.i][cell.j-1])
         } else if (dirs[i] == 1) {

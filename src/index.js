@@ -57,14 +57,35 @@ window.addEventListener("keyup",keyUp)
 
 
 function drawCanvas() {
-    ctx.color = "white";
     ctx.clearRect(0,0,canvas.width,canvas.height)
     // this should go in a seperate update function
 
     ctx.fillStyle = "gray"
     ctx.fillRect(map.x,map.y,map.size*map.ts,map.size*map.ts)
 
-    minotaur.draw()
+    for(let i =-3; i<4; i++){
+        for(let j = -3; j<4; j++){
+            if(player.i+j >= 0 && player.j+i >= 0 && player.i+j < map.size && player.j+i < map.size){
+                cells[player.i+j][player.j+i].update(0)
+            }
+        }
+    }
+
+    for(let i =0; i<4; i++){
+        for(let j = -3; j<4; j++){
+            if(player.i+j >= 0 && player.j+i >= 0 && player.i+j < map.size && player.j+i < map.size){
+                cells[player.i+j][player.j+i].update(2)
+            }
+        }
+    }
+
+
+    for(let j = -3; j<4; j++){
+        if(player.i+j >= 0 && player.i+j < map.size){
+            cells[player.i+j][map.size-1].update(1)
+        }
+    }
+    
     key.draw()
 
     for(let i = 0; i < npcs.length; i++){
@@ -72,30 +93,23 @@ function drawCanvas() {
     }
 
     for(let i = 0; i < 3; i++){
-        swords[i].draw()
+        if(!swords[i].collect){
+            swords[i].draw()
+        }
     }
+
+    minotaur.draw()
     //window.requestAnimationFrame(drawCanvas)
 }
+
 function update() {
+
     player.move()
+    player.isDead()
 
-        for(let i =-3; i<4; i++){
-            for(let j = -3; j<4; j++){
-                if(player.i+j >= 0 && player.j+i >= 0 && player.i+j < map.size && player.j+i < map.size){
-                    cells[player.i+j][player.j+i].update(false)
-                }
-            }
-        }
-
-        for(let i =-3; i<4; i++){
-            for(let j = -3; j<4; j++){
-                if(player.i+j >= 0 && player.i+j < map.size){
-                    if(player.j+i == map.size-1){
-                        cells[player.i+j][player.j+i].update(true)
-                    }
-                }
-            }
-        }
+    //minotaur.AI()
+    
+    //minotaur.move()
 
     
 
@@ -108,5 +122,6 @@ function update() {
     for(let i = 0; i < npcs.length; i++){
         npcs[i].move()
         npcs[i].AI()
+        npcs[i].isDead()
     }
 }

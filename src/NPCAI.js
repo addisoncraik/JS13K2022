@@ -4,8 +4,11 @@ let colors = ["red","yellow","magenta","pink","orange","green","aqua","tomato","
 class NPC {
     constructor(i,j,s,cI) {
 
-        this.x = i*map.ts + map.ts/4 + randInt(map.ts/2)
-        this.y = j*map.ts + map.ts/4 + randInt(map.ts/2) //in relation to map
+        this.x = (i+0.5)*map.ts
+        this.y = (j+0.5)*map.ts//in relation to map
+
+        this.i = i
+        this.j = j
 
         this.xVel = 0
         this.yVel = 0
@@ -23,8 +26,13 @@ class NPC {
         this.dir = randInt(3) //0 = up, 1 = right, 2 = bottom, 3 = left
         this.selected = s
 
+        this.escape = false
+
         this.destination = {x:this.x,y:this.y}
         this.lastDestination = {i:i,j:j}
+
+        this.health = 1
+        this.dead = false
 
         //asthetics
         this.colour = colors[cI]
@@ -32,11 +40,13 @@ class NPC {
 
 
     draw () {
-        ctx.fillStyle = this.colour
-        ctx.fillRect(map.x+this.x,map.y+this.y,this.width,this.height)
+        if(!this.dead){
+            ctx.fillStyle = this.colour
+            ctx.fillRect(map.x+this.x,map.y+this.y,this.width,this.height)
 
-        ctx.fillRect(map.x+this.destination.x,map.y+this.destination.y,5,5)
-        ctx.fillStyle = "black"
+            ctx.fillRect(map.x+this.destination.x,map.y+this.destination.y,5,5)
+            ctx.fillStyle = "black"
+        }
     }
 
     move() {
@@ -55,6 +65,9 @@ class NPC {
             this.xVel *= this.fric;
             this.yVel *= this.fric;
         }
+
+        this.i = Math.floor(this.x/map.ts)
+        this.j = Math.floor(this.y/map.ts)
     }
 
     combat(){
@@ -69,14 +82,13 @@ class NPC {
     }
 
     AI () {
+
         if(this.selected){
             this.dir = undefined
         }else{
             if(this.x > this.destination.x-6 && this.y > this.destination.y-6 && this.x < this.destination.x+6 && this.y < this.destination.y+6){
-                let npcI = Math.floor((this.x)/map.ts)
-                let npcJ = Math.floor((this.y)/map.ts)
 
-                if(npcI < 0 || npcJ < 0 || npcI >= map.size || npcJ >= map.size){
+                if(this.i < 0 || this.j < 0 || this.i >= map.size || this.j >= map.size){
                     
                     if(this.dir != undefined){
                         this.dir = undefined
@@ -84,7 +96,7 @@ class NPC {
                     return
                 }
 
-                let edges = cells[npcI][npcJ].edges
+                let edges = cells[this.i][this.j].edges
                 let dirs = []
 
                 for(let i = 0; i < edges.length; i++){
@@ -93,56 +105,102 @@ class NPC {
                     }
                 }
 
-                if(npcI-1 >= 0){
-                    if(cells[npcI-1][npcJ].edges[1]){
+                if(this.i-1 >= 0){
+                    if(cells[this.i-1][this.j].edges[1]){
                         dirs.splice(dirs.indexOf(3),1)
                     }
                 }
 
-                if(npcJ+1 < map.size){
-                    if(cells[npcI][npcJ+1].edges[0]){
+                if(this.j+1 < map.size){
+                    if(cells[this.i][this.j+1].edges[0]){
                         dirs.splice(dirs.indexOf(2),1)
                     }
                 }
-                
+
 
                 if(dirs.length > 0){
 
-                    if(this.lastDestination.j > npcJ){
+                    if(this.lastDestination.j > this.j){
                         dirs.splice(dirs.indexOf(2),1)
                     }
 
-                    else if(this.lastDestination.i > npcI){
+                    else if(this.lastDestination.i > this.i){
                         dirs.splice(dirs.indexOf(1),1)
                     }
 
-                    else if(this.lastDestination.j < npcJ){
+                    else if(this.lastDestination.j < this.j){
                         dirs.splice(dirs.indexOf(0),1)
                     }
 
-                    else if(this.lastDestination.i < npcI){
+                    else if(this.lastDestination.i < this.i){
                         dirs.splice(dirs.indexOf(3),1)
                     }
                 }
 
-                let dir = randInt(dirs.length)
+                let neighbouringCells = []
 
+                for (let i = 0;i<dirs.length;i++){
+                    let cell;
+                    if (dirs[i] == 0) {
+                        cell = cells[this.i][this.j-1]
+                    } else if (dirs[i] == 1) {
+                        cell = cells[this.i+1][this.j]
+                    } else if (dirs[i] == 2) {
+                        cell = cells[this.i][this.j+1]
+                    } else if (dirs[i] == 3) {
+                        cell = cells[this.i-1][this.j]
+                    }
+                    neighbouringCells.push({i:cell.i,j:cell.j,g:cell.gScore,d:i})
+                }
 
-                this.lastDestination.i = npcI
-                this.lastDestination.j = npcJ
+                neighbouringCells.sort((a,b)=>{
+                    return a.g - b.g
+                })
+            
+
+                let dir = Math.random()
+
+                if(neighbouringCells.length > 1){
+                    if(dir > 0.3){
+                        dir = neighbouringCells[0].d
+                    }else if(dirs.length == 2){
+                        dir = neighbouringCells[1].d
+                    }else if(dir > 0.15){
+                        dir = neighbouringCells[1].d
+                    }else if(dirs.length == 3){
+                        dir = neighbouringCells[2].d
+                    }else if(dir > 0.05){
+                        dir = neighbouringCells[2].d
+                    }else{
+                        dir = neighbouringCells[3].d
+                    }
+                }else{
+                    dir = 0
+                }
+
+                this.lastDestination.j = Math.floor(this.destination.y/map.ts)
+                this.lastDestination.i = Math.floor(this.destination.x/map.ts)
+
+                if(cells[this.i][this.j].open){
+                    dir=dirs.length
+                    this.escape = true
+                    dirs.push(cells[this.i][this.j].exit)
+
+                    console.log("escaped")
+                }
 
                 switch(dirs[dir]){
                     case 0:
-                        this.destination.y = (npcJ-1)*map.ts + map.ts/4 + randInt(map.ts/2)
+                        this.destination.y = (this.j-0.5)*map.ts
                         break;
                     case 1:
-                        this.destination.x = (npcI+1)*map.ts + map.ts/4 + randInt(map.ts/2)
+                        this.destination.x = (this.i+1.5)*map.ts
                         break;
                     case 2:
-                        this.destination.y = (npcJ+1)*map.ts + map.ts/4 + randInt(map.ts/2)
+                        this.destination.y = (this.j+1.5)*map.ts
                         break;
                     case 3:
-                        this.destination.x = (npcI-1)*map.ts + map.ts/4 + randInt(map.ts/2)
+                        this.destination.x = (this.i-0.5)*map.ts
                         break;
                 }
             }
@@ -163,11 +221,18 @@ class NPC {
             }
         }
     }
+
+    isDead(){
+        if(this.health <= 0 && !this.dead){
+            this.dead = true
+            console.log("NPC Dead")
+        }
+    }
 }
 
 let npcs = []
 
-let amount = 100
+let amount = 20
 
 for(let i = 0; i < amount; i++){
     npcs.push(new NPC(randInt(map.size),randInt(map.size),0,randInt(colors.length)))
