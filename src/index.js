@@ -103,6 +103,7 @@ function drawCanvas() {
 }
 
 function update() {
+    player.canDraw = true
 
     player.move()
     player.isDead()

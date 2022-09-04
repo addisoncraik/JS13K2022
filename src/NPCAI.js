@@ -1,6 +1,4 @@
 
-let colors = ["red","yellow","magenta","pink","orange","green","aqua","tomato","purple","silver","olive"]
-
 class NPC {
     constructor(i,j,s,cI) {
 
@@ -14,10 +12,10 @@ class NPC {
         this.yVel = 0
 
         this.fric = 0.9
-        this.acc = 0.1
+        this.acc = 0.3
 
-        this.width = 10;
-        this.height = 20;
+        this.width = 45;
+        this.height = 130;
 
         this.health = 3;
 
@@ -35,29 +33,88 @@ class NPC {
         this.dead = false
 
         //asthetics
-        this.colour = colors[cI]
+        this.sC = randInt(4)
+        this.fC = randInt(3,1)
+        this.aC = randInt(2)
+
+        this.lastDir = ""
+
+        this.offset = 0
+        this.offsetVel = 0.07
+
+        this.legRotation = 0
+        this.legVel = 2
+
+        this.armRotation = 0
+        this.armVel = 0.7
     }
 
 
     draw () {
         if(!this.dead){
-            ctx.fillStyle = this.colour
-            ctx.fillRect(map.x+this.x,map.y+this.y,this.width,this.height)
 
-            ctx.fillRect(map.x+this.destination.x,map.y+this.destination.y,5,5)
-            ctx.fillStyle = "black"
+            ctx.save()
+            ctx.translate(map.x+this.x,map.y+this.y)
+
+            if(this.lastDir == "right"){
+                ctx.translate(this.width,0)
+                ctx.scale(-1,1)
+            }
+
+            draw(9,0,30+this.offset,0.5)
+
+
+            ctx.globalAlpha = 0.2
+            ctx.fillStyle = "#000000"
+            ctx.fillRect(-10,127,65,20)
+            ctx.globalAlpha = 1
+
+            ctx.shadowColor = '#0000004d';
+            ctx.shadowBlur = 3;
+
+
+
+            ctx.save()
+            ctx.translate(10,100)
+            ctx.rotate(this.legRotation*(Math.PI/180))
+
+            draw(37+this.sC,-14,10,0.5)
+            ctx.restore()
+
+            ctx.save()
+            ctx.translate(33,100)
+            ctx.rotate(-this.legRotation*(Math.PI/180))
+
+            draw(37+this.sC,-17,10,0.5)
+            ctx.restore()
+
+
+            ctx.shadowBlur = 0;
+
+            draw(34+this.fC,0,30+this.offset,0.5)
+            draw(10+this.aC*12+this.fC*4+this.sC,0,-20-this.offset,0.5)
+
+            ctx.save()
+            ctx.fillStyle = skinColors[this.sC]
+            ctx.translate(25,40)
+            ctx.rotate(-this.armRotation*(Math.PI/180))
+            ctx.fillRect(-9,31,18,18)
+            ctx.restore()
+
+            
+            ctx.restore()
         }
     }
 
     move() {
         if(this.dir != undefined){
-            if (this.dir == 0) { this.yVel -= this.acc; }
+            if (this.dir == 0) { this.yVel -= this.acc;}
 
-            if (this.dir == 1) { this.xVel += this.acc; }
+            if (this.dir == 1) { this.xVel += this.acc;this.lastDir = "right"}
 
             if (this.dir == 2) { this.yVel += this.acc; }
 
-            if (this.dir == 3) { this.xVel -= this.acc; }
+            if (this.dir == 3) { this.xVel -= this.acc;this.lastDir = "left"}
 
             this.x += this.xVel;// Update the current position
             this.y += this.yVel;
@@ -67,7 +124,45 @@ class NPC {
         }
 
         this.i = Math.floor(this.x/map.ts)
-        this.j = Math.floor(this.y/map.ts)
+        this.j = Math.floor((this.y+this.height)/map.ts)
+
+
+        if(this.dir != undefined){
+            this.legRotation += this.legVel
+            this.armRotation += this.armVel
+        }else{
+            if(this.legRotation > 0){
+                this.legRotation -= Math.abs(this.legVel)
+            }
+
+            if(this.legRotation < 0){
+                this.legRotation += Math.abs(this.legVel)
+            }
+
+            if(this.armRotation > 0){
+                this.armRotation -= Math.abs(this.armVel)
+            }
+            
+            if(this.armRotation < 0){
+                this.armRotation += Math.abs(this.armVel)
+            }
+        }
+
+        
+
+        if(Math.abs(this.legRotation) > 25){
+            this.legVel = -this.legVel
+        }
+
+        if(Math.abs(this.armRotation) > 14){
+            this.armVel = -this.armVel
+        }
+
+        if(Math.abs(this.offset) > 1){
+            this.offsetVel = -this.offsetVel
+        }
+
+        this.offset += this.offsetVel
     }
 
     combat(){
@@ -86,7 +181,7 @@ class NPC {
         if(this.selected){
             this.dir = undefined
         }else{
-            if(this.x > this.destination.x-6 && this.y > this.destination.y-6 && this.x < this.destination.x+6 && this.y < this.destination.y+6){
+            if(this.x+this.width/2 > this.destination.x-12 && this.y+this.height > this.destination.y-12 && this.x+this.width/2 < this.destination.x+12 && this.y+this.height < this.destination.y+12){
 
                 if(this.i < 0 || this.j < 0 || this.i >= map.size || this.j >= map.size){
                     
@@ -205,18 +300,18 @@ class NPC {
                 }
             }
 
-            if(this.destination.x+3 < this.x){
+            if(this.destination.x+6 < this.x+this.width/2){
                 this.dir = 3
             }
-            if(this.destination.x-3 > this.x){
+            if(this.destination.x-6 > this.x+this.width/2){
                 this.dir = 1
             }
 
-            if(this.destination.y-3 > this.y){
+            if(this.destination.y-6 > this.y+this.height){
                 this.dir = 2
             }
 
-            if(this.destination.y+3 < this.y){
+            if(this.destination.y+6 < this.y+this.height){
                 this.dir = 0
             }
         }
@@ -235,7 +330,7 @@ let npcs = []
 let amount = 20
 
 for(let i = 0; i < amount; i++){
-    npcs.push(new NPC(randInt(map.size),randInt(map.size),0,randInt(colors.length)))
+    npcs.push(new NPC(randInt(map.size),randInt(map.size),0))
 }
 
 //select npc to look for sword pieces (theseus) the rest wander, looking for an exit

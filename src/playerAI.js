@@ -50,7 +50,6 @@ let player = {
     health: 3,
 
     offset:0,
-    tunicOffset:0,
     offsetVel: 0.07,
 
     legRotation:0,
@@ -60,6 +59,12 @@ let player = {
     armVel:0.7,
 
     sword:0,
+
+    sC:randInt(4),
+    fC:0,
+    aC:0,
+
+    canDraw:false,
 
     draw () {
 
@@ -71,52 +76,54 @@ let player = {
             ctx.scale(-1,1)
         }
 
-        draw(10,0,30+this.offset,0.5)
+        draw(9,0,30+this.offset,0.5)
 
 
-        ctx.globalAlpha = 0.1
-        ctx.fillStyle = "#000000"
-        ctx.fillRect(-10,127,65,20)
+        if(this.canDraw){
 
-        ctx.fillStyle = "green"
-        ctx.fillRect(0,0,45,140)
+            ctx.globalAlpha = 0.2
+            ctx.fillStyle = "#000000"
+            ctx.fillRect(-10,127,65,20)
+            ctx.globalAlpha = 1
+        
+        
 
-        ctx.globalAlpha = 1
-
-        ctx.shadowColor = '#0000004d';
-        ctx.shadowBlur = 3;
-
+            ctx.shadowColor = '#0000004d';
+            ctx.shadowBlur = 3;
+        }
 
 
         ctx.save()
         ctx.translate(10,100)
         ctx.rotate(this.legRotation*(Math.PI/180))
 
-        draw(12,-14,10,0.5)
+        draw(37+this.sC,-14,10,0.5)
         ctx.restore()
 
         ctx.save()
         ctx.translate(33,100)
         ctx.rotate(-this.legRotation*(Math.PI/180))
 
-        draw(12,-17,10,0.5)
+        draw(37+this.sC,-17,10,0.5)
         ctx.restore()
 
 
         ctx.shadowBlur = 0;
 
 
-        draw(11,0,30+this.offset,0.5)
-        draw(9,0,-20-this.offset,0.5)
+        draw(34+this.fC,0,30+this.offset,0.5)
+        draw(10+this.aC*12+this.fC*4+this.sC,0,-20-this.offset,0.5)
 
-        for(let i = 0; i < 3; i++){
-            if(swords[i].collect){
-                swords[i].draw()
+        if(this.canDraw){
+            for(let i = 0; i < 3; i++){
+                if(swords[i].collect){
+                    swords[i].draw()
+                }
             }
         }
 
         ctx.save()
-        ctx.fillStyle = "#7a5229"
+        ctx.fillStyle = skinColors[this.sC]
 
         if(this.sword){
             ctx.translate(-10,80)
@@ -131,6 +138,8 @@ let player = {
 
         
         ctx.restore()
+
+        this.canDraw = false
         
     },
 
@@ -167,19 +176,26 @@ let player = {
 
         if(this.up || this.down || this.left || this.right){
             this.legRotation += this.legVel
-        }else if(this.legRotation > 0){
-            this.legRotation -= Math.abs(this.legVel)
-        }else if(this.legRotation < 0){
-            this.legRotation += Math.abs(this.legVel)
+            this.armRotation += this.armVel
+        }else{
+            if(this.legRotation > 0){
+                this.legRotation -= Math.abs(this.legVel)
+            }
+
+            if(this.legRotation < 0){
+                this.legRotation += Math.abs(this.legVel)
+            }
+
+            if(this.armRotation > 0){
+                this.armRotation -= Math.abs(this.armVel)
+            }
+            
+            if(this.armRotation < 0){
+                this.armRotation += Math.abs(this.armVel)
+            }
         }
 
-        if(this.up || this.down || this.left || this.right){
-            this.armRotation += this.armVel
-        }else if(this.armRotation > 0){
-            this.armRotation -= Math.abs(this.armVel)
-        }else if(this.armRotation < 0){
-            this.armRotation += Math.abs(this.armVel)
-        }
+        
 
         if(Math.abs(this.legRotation) > 25){
             this.legVel = -this.legVel
