@@ -755,8 +755,8 @@
         x: 0,
         y: 0,
 
-        i:10,
-        j:10,
+        i:0,
+        j:0,
 
         cX: 700/2-22.5,
         cY: 700/2-70,
@@ -1391,11 +1391,11 @@
     }
 
     let minotaur = {
-        x:10.5*map.ts,
-        y:10.5*map.ts,
+        x:0,
+        y:0,
 
-        i:10,
-        j:10,
+        i:0,
+        j:0,
 
         width: 80,
         height: 250,
@@ -1413,7 +1413,7 @@
 
         target:player,
         path:[],
-        destination:{x:null,y:null},
+        destination:{x:0,y:0},
         lastDir: "",
 
         offset:0,
@@ -2049,6 +2049,7 @@
         player.aC = ccMenu.aC
         player.sC = ccMenu.sC
         player.i = player.j = 10
+        player.x = player.y = player.oldX = player.oldY = 10.5*map.ts
 
         //sword stuff
         swords = []
@@ -2070,6 +2071,7 @@
         minotaur.target = player
         minotaur.path = []
         minotaur.dead = false
+        minotaur.destination.x = minotaur.destination.y = minotaur.x = minotaur.y = 10.5*map.ts
 
         //npc stuff
         npcs = []
@@ -2175,13 +2177,13 @@
         }
 
         //minotaur
-        if(isInBounds(minotaur.x,minotaur.y,minotaur.width,minotaur.height)){
+        if(isInBounds(minotaur.x-70,minotaur.y-50,minotaur.width+140,minotaur.height+100)){
             dObjects.push({y:minotaur.y+minotaur.height,t:"m"})
         }
 
         //npcs
         for(let i =0; i<npcs.length; i++){
-            if(isInBounds(npcs[i].x,npcs[i].y,npcs[i].width,npcs[i].height)){
+            if(isInBounds(npcs[i].x,npcs[i].y-20,npcs[i].width,npcs[i].height+40)){
                 dObjects.push({y:npcs[i].y+npcs[i].height,t:"n",i:i})
             }
         }
