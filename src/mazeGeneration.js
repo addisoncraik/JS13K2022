@@ -16,6 +16,7 @@ let map = {
     x:canvas.width/2-(263*2),//*15,
     y:canvas.height/2-(263*2),//*15,
     ws:45,
+    shake: false,
 }
 
 
@@ -212,6 +213,8 @@ function collision(object, wallP, wallD, exit) {
                 for(let i =0; i<exitCoords.length; i++){
                     cells[exitCoords[i][0]][exitCoords[i][1]].open = true
                 }
+                map.shake = true
+                setTimeout(()=>{this.canHit = true;map.shake=false},1500)
             }
             
             return;
@@ -236,6 +239,8 @@ function collision(object, wallP, wallD, exit) {
                 for(let i =0; i<exitCoords.length; i++){
                     cells[exitCoords[i][0]][exitCoords[i][1]].open = true
                 }
+                map.shake = true
+                setTimeout(()=>{this.canHit = true;map.shake=false},1500)
             }
 
             return;
@@ -261,6 +266,8 @@ function collision(object, wallP, wallD, exit) {
                 for(let i =0; i<exitCoords.length; i++){
                     cells[exitCoords[i][0]][exitCoords[i][1]].open = true
                 }
+                map.shake = true
+                setTimeout(()=>{this.canHit = true;map.shake=false},1500)
             }
 
             return
@@ -283,6 +290,8 @@ function collision(object, wallP, wallD, exit) {
                 for(let i =0; i<exitCoords.length; i++){
                     cells[exitCoords[i][0]][exitCoords[i][1]].open = true
                 }
+                map.shake = true
+                setTimeout(()=>{this.canHit = true;map.shake=false},1500)
             }
 
             return

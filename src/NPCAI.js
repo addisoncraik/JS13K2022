@@ -34,8 +34,8 @@ class NPC {
 
         //asthetics
         this.sC = randInt(4)
-        this.fC = randInt(3,1)
-        this.aC = randInt(2)
+        this.fC = randInt(3)
+        this.aC = randInt(3)
 
         this.lastDir = ""
 
@@ -61,7 +61,7 @@ class NPC {
                 ctx.scale(-1,1)
             }
 
-            draw(9,0,30+this.offset,0.5)
+            draw(12,0,30+this.offset,0.5)
 
 
             ctx.globalAlpha = 0.2
@@ -78,21 +78,21 @@ class NPC {
             ctx.translate(10,100)
             ctx.rotate(this.legRotation*(Math.PI/180))
 
-            draw(37+this.sC,-14,10,0.5)
+            draw(52+this.sC,-14,10,0.5)
             ctx.restore()
 
             ctx.save()
             ctx.translate(33,100)
             ctx.rotate(-this.legRotation*(Math.PI/180))
 
-            draw(37+this.sC,-17,10,0.5)
+            draw(52+this.sC,-17,10,0.5)
             ctx.restore()
 
 
             ctx.shadowBlur = 0;
 
-            draw(34+this.fC,0,30+this.offset,0.5)
-            draw(10+this.aC*12+this.fC*4+this.sC,0,-20-this.offset,0.5)
+            draw(49+this.fC,0,30+this.offset,0.5)
+            draw(13+this.aC*12+this.fC*4+this.sC,0,-20-this.offset,0.5)
 
             ctx.save()
             ctx.fillStyle = skinColors[this.sC]
@@ -317,13 +317,13 @@ class NPC {
         }
     }
 
-    isDead(){
-        if(this.health <= 0 && !this.dead){
-            this.dead = true
-            console.log("NPC Dead")
-        }
+    hit(){
+        this.dead = true
+        console.log("NPC Dead")
     }
 }
+
+
 
 let npcs = []
 

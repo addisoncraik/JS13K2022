@@ -20,8 +20,10 @@ let data = [
     {"d":"c #bababa 1, p M27 0L18 7L18 375C18 375 25 354 27 327L36 7Z f, c #737373 1, p M9 0L18 7L18 375C18 375 11 354 9 327L0 7Z f,","w":36,"h":375}, //sword blade
     {"d":"c #954b33 1, p M13 112L0 94C0 94 4 90 26 84C49 80 57 80 58 80C90 84 112 90 116 94L 103 112C90 96 76 88 58 91C58 91 40 88 26 96 f, c #782c19 1, p M44 83 L 49 0 L 65 0 L 72 83 f, c #954b33 1, r 40 77 36 8 1,","w":116,"h":112}, //hilt
     {"d":"c #a17c3b 1, a 12 7 7 0 360 1, c #b38432 1, a 12 16 12 0 360 1,","w":24,"h":28}, //pommel
+    {"d":"c #852610 1, r 75 160 73 22 1, c #a0472d 1, r 61 60 98 114 1, c #cbaf8c 1, p M23 0L0 77L85 129L82 72L39 59L23 0Z f, c #852610 1, r 135 122 45 45 1, c #6a1608 1, a 159 145 8 0 360 1, c #6a1608 0 1, w 6, a 128 99 13 0 230 0 1, p M110 80L150 105 s,","w":180,"h":180},//minotaur head
+    {"d":"c #a0472d 1, p M26 0L91 0L100 152L41 145L0 60L26 0Z f, r 69 8 33 60 1, c #852610 1, r 79 118 23 15 1, r 77 97 23 15 1, r 73 76 26 15 1, c #251612 1, r 29 142 65 21 1, c #483127 1, r 81 138 24 57 1,","w":105,"h":195}, //minotaur body
+    {"d":"c #664e4d 1, r 34 10 8 145 1, c #c57404 1, c #deb000 0 1, w 4, p M36 29C14 31 25 2 25 2C25 2-2 2 2 35C2 68 26 70 26 70C26 70 11 38 36 42C41 43 58 42 58 42L82 35L57 29C57 29 44 28 36 29Z fs, c #deb000 1, r 32 19 12 34 1, r 33 110 10 34 1,","w":88,"h":155},//minotaur axe
     {"d":"c #cbb69d 1, p M90 165L30 190L0 152L47 129L90 165Z f,","w":95,"h":190}, //tunic Back
-
 ]
 
 
@@ -60,26 +62,26 @@ function createSpriteSheet(){
     }
 }
 
-let skinColors = ["#7a5229","#c67f54","#763a21","#431b14"]
+let skinColors = ["#7a5229","#c67f54","#763a21","#431b14","#a0472d"]
 
 function clothingVariations(){
     let featherColors = ["#631c0f","#272863","#440f57"]
-    let armourColors = [["#7a5b23","#a47e3c"],["#4e4e4e","#767676"]]
+    let armourColors = [["#7a5b23","#a47e3c"],["#4e4e4e","#767676"],["#784b40","#A57164"]]
 
-    for(let aC = 0; aC < armourColors.length; aC++){
-        for(let fC = 0; fC < featherColors.length; fC++){
-            for(let sC = 0; sC < skinColors.length; sC ++){
+    for(let aC = 0; aC < 3; aC++){
+        for(let fC = 0; fC < 3; fC++){
+            for(let sC = 0; sC < 4; sC ++){
                 data.push({"d":"c "+skinColors[sC]+" 1, r 10 72 82 68 1, c "+featherColors[fC]+" 1, a 55 65 65 -126 60 1, c "+armourColors[aC][1]+" 1, c "+armourColors[aC][0]+" 0 1, w 4, p M52 34C27 34 6 52 2 77L2 101L15 101L15 77L45 77L45 125L89 125L102 125L102 77C98 52 77 34 52 34Z fs, c #ffffff 1, r 21 90 17 30 1, c #000000 1 1, r 20 99 15 19 1,","w":120,"h":140}) //head
             }
         }
     }
 
-    for(let fC = 0; fC < featherColors.length; fC++){
+    for(let fC = 0; fC < 3; fC++){
         data.push({"d":"c #e6d9c6 1, p M41 0L72 0L92 92L90 114L90 165L47 138L0 153L12 121L12 89L41 0Z f, c "+featherColors[fC]+" 1, r 8 105 87 25 1,","w":95,"h":190}) //tunic Front
     }
 
-    for(let sC = 0; sC < skinColors.length; sC ++){
-        data.push({"d":"c #402d22 1, r 0 44 50 16 1, c "+skinColors[sC]+" 1, r 23 0 22 36 1, r 0 36 49 16 1, c #402d22 1, r 4 34 6 23 1, r 15 34 6 23 1, r 44 14 6 44 1, r 23 27 22 6 1, r 23 16 22 6 1, r 4 32 20 4 1, r 20 16 5 17 1,","w":50,"h":60}) //Foot
+    for(let sC = 0; sC < 5; sC ++){
+        data.push({"d":"c #402d22 1, r 0 44 50 14 1, c "+skinColors[sC]+" 1, r 23 0 22 36 1, r 0 36 49 16 1, c #402d22 1, r 4 34 6 23 1, r 15 34 6 23 1, r 44 14 6 44 1, r 23 27 22 6 1, r 23 16 22 6 1, r 4 32 20 4 1, r 20 16 5 17 1,","w":50,"h":60}) //Foot
     }
 }
 

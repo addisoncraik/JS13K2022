@@ -57,7 +57,17 @@ window.addEventListener("keyup",keyUp)
 
 
 function drawCanvas() {
+    let scaleFactor = canvas.width/700
+
     ctx.clearRect(0,0,canvas.width,canvas.height)
+    ctx.save()
+    ctx.scale(scaleFactor,scaleFactor)
+
+    if(map.shake){
+        var dx = Math.random()*10;
+        var dy = Math.random()*10;
+        ctx.translate(dx, dy); 
+    }
     // this should go in a seperate update function
 
     ctx.fillStyle = "gray"
@@ -99,6 +109,8 @@ function drawCanvas() {
     }
 
     minotaur.draw()
+
+    ctx.restore()
     //window.requestAnimationFrame(drawCanvas)
 }
 
@@ -108,9 +120,9 @@ function update() {
     player.move()
     player.isDead()
 
-    //minotaur.AI()
-    
-    //minotaur.move()
+    minotaur.axeSwing()
+    minotaur.AI()
+    minotaur.move()
 
     
 
@@ -123,6 +135,5 @@ function update() {
     for(let i = 0; i < npcs.length; i++){
         npcs[i].move()
         npcs[i].AI()
-        npcs[i].isDead()
     }
 }

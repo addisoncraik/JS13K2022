@@ -1,18 +1,3 @@
-class character {
-    constructor() {
-        this.width = 10;
-        this.height = 20;
-        this.health = 3;
-    }
-    draw () {
-
-    }
-    AI () {
-
-    }
-}
-
-
 let player = {
 
     up:false,
@@ -26,8 +11,8 @@ let player = {
     i:0,
     j:0,
 
-    cX: canvas.width/2-22.5,
-    cY: canvas.height/2-70,
+    cX: 700/2-22.5,
+    cY: 700/2-70,
 
     oldX: 0,
     oldY: 0,
@@ -60,9 +45,13 @@ let player = {
 
     sword:0,
 
-    sC:randInt(4),
+    sC:0,
     fC:0,
     aC:0,
+
+    dead:false,
+
+    canHit: true,
 
     canDraw:false,
 
@@ -76,7 +65,7 @@ let player = {
             ctx.scale(-1,1)
         }
 
-        draw(9,0,30+this.offset,0.5)
+        draw(12,0,30+this.offset,0.5)
 
 
         if(this.canDraw){
@@ -86,10 +75,6 @@ let player = {
             ctx.fillRect(-10,127,65,20)
             ctx.globalAlpha = 1
         
-        
-
-            ctx.shadowColor = '#0000004d';
-            ctx.shadowBlur = 3;
         }
 
 
@@ -97,22 +82,20 @@ let player = {
         ctx.translate(10,100)
         ctx.rotate(this.legRotation*(Math.PI/180))
 
-        draw(37+this.sC,-14,10,0.5)
+        draw(52+this.sC,-14,10,0.5)
         ctx.restore()
 
         ctx.save()
         ctx.translate(33,100)
         ctx.rotate(-this.legRotation*(Math.PI/180))
 
-        draw(37+this.sC,-17,10,0.5)
+        draw(52+this.sC,-17,10,0.5)
         ctx.restore()
 
 
-        ctx.shadowBlur = 0;
 
-
-        draw(34+this.fC,0,30+this.offset,0.5)
-        draw(10+this.aC*12+this.fC*4+this.sC,0,-20-this.offset,0.5)
+        draw(49+this.fC,0,30+this.offset,0.5)
+        draw(13+this.aC*12+this.fC*4+this.sC,0,-20-this.offset,0.5)
 
         if(this.canDraw){
             for(let i = 0; i < 3; i++){
@@ -211,7 +194,16 @@ let player = {
 
         this.offset += this.offsetVel
     },
-
+    hit(){
+        if(this.canHit){
+            this.canHit = false
+            map.shake = true
+            console.log("hit")
+            this.health --
+            setTimeout(()=>{this.canHit = true;map.shake=false},750)
+        }
+        
+    },
     takeDamage (src) {
         if (src) {
             this.health --;
@@ -244,8 +236,8 @@ let player = {
     },
     isDead(){
         if(this.health <= 0){
-            this.up = this.down = this.right = this.left = false
-            console.log("dead")
+            this.dead = true
+            //console.log("dead")
         }
     }
 }
