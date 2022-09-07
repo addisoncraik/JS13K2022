@@ -1,0 +1,10 @@
+{
+  "dependencies": {
+    "roadroller": "^2.1.0"
+  },
+    "scripts": {
+    "regmin": "cd minified && terser -o minsrc.js -c passes=2 -m toplevel -- ../\"polished build\"/src.js && zip -r game.zip . -x \".DS_Store\" -x \"__MACOSX\" && advzip -z -4 game.zip",
+    "maxmin": "cd minified && terser -o minsrc.js -c passes=2 -m toplevel -- ../\"polished build\"/src.js && npx roadroller minsrc.js -o minsrc.js && zip -r game.zip . -x \".DS_Store\" -x \"__MACOSX\" && advzip -z -4 game.zip",
+    "zipmin": "cd minified && zip -r game.zip . -x \".DS_Store\" -x \"__MACOSX\" && advzip -z -4 game.zip"
+  }
+}
