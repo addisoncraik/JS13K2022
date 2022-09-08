@@ -39,6 +39,9 @@ let mute = false
 
 let exitCoords;
 
+let gameStart;
+let gameEnd;
+
 //Where all asset data is stored
 let data = [
     {"d":"c #693535 1, c #482727 0 1, w 6, a 11 66 8 0 360 1 1, a 33 53 21 0 360 1 1, a 65 36 33 0 360 1 1, c #492727 0 1, a 120 53 20 0 360 1 1, c #482727 0 1, a 103 36 20 0 360 1 1, a 83 47 28 0 360 1 1, a 105 67 8 0 360 1 1, c #4d2929 0 1, a 53 65 12 0 360 1 1,","w":143,"h":80}, //dirt
@@ -51,6 +54,7 @@ let data = [
     {"d":"w 6, c #d21414 0 1, p M0 0L61 96 fs,","w":61,"h":96}, //Speaker Off
     {"d":"c #be392c 0 1, w 15, p M64 0L32 30 s, c #e2574c 0 1, p M0 0L32 30 s, c #ec9d5d 1, a 32 44 19 0 360 1, c #bf7131 0 1, w 4, a 32 44 12 0 360 1 1,","w":64,"h":64}, //Medal
     {"d":"c #525252 0 1, w 4, r 5 11 50 0 0 1, c #454545 1, a 22 11 7 0 360 1, r 5 32 50 0 0 1, a 41 32 7 0 360 1, r 7 53 50 0 0 1, a 30 53 7 0 360 1,","w":64,"h":64},//color wheel
+    {"d":"c #000000 1 1, g 0.3, w 8, a 88 33 17 0 360 0 1, r 8 31 60 8 1, r 11 37 8 17 1, r 24 37 8 17 1,","w":120,"h":64},//key sillouette
     {"d":"c #bababa 1, p M27 0L18 7L18 375C18 375 25 354 27 327L36 7Z f, c #737373 1, p M9 0L18 7L18 375C18 375 11 354 9 327L0 7Z f,","w":36,"h":375}, //sword blade
     {"d":"c #954b33 1, p M13 112L0 94C0 94 4 90 26 84C49 80 57 80 58 80C90 84 112 90 116 94L 103 112C90 96 76 88 58 91C58 91 40 88 26 96 f, c #782c19 1, p M44 83 L 49 0 L 65 0 L 72 83 f, c #954b33 1, r 40 77 36 8 1,","w":116,"h":112}, //hilt
     {"d":"c #a17c3b 1, a 12 7 7 0 360 1, c #b38432 1, a 12 16 12 0 360 1,","w":24,"h":28}, //pommel
@@ -60,11 +64,62 @@ let data = [
     {"d":"c #cbb69d 1, p M90 165L30 190L0 152L47 129L90 165Z f,","w":95,"h":190}, //tunic Back
 ]
 
+let alphabet = [
+    {c:" ",d:"",w:100},
+    {c:"a",d:"M50 0L10 100L90 100Z",w:100},
+    {c:"b",d:"M10 0L10 100L60 70L18 50L60 30Z",w:70},
+    {c:"c",d:"M85 32L55 0L10 50L55 100L85 67",w:95},
+    {c:"d",d:"M10 0L10 100L80 50Z",w:90},
+    {c:"e",d:"M80 10L10 10L50 50L10 95L80 90",w:90},
+    {c:"f",d:"M70 0L20 4L20 100,M60 43L10 49",w:90},
+    {c:"g",d:"M83 30L55 0L10 50L55 100L85 60L49 60",w:100},
+    {c:"h",d:"M20 0V100,M70 0V100,M10 50L80 44",w:90},
+    {c:"i",d:"M40 0V100,M70 92L10 90,M10 10L70 7",w:80},
+    {c:"j",d:"M50 0L60 70L35 93L10 70",w:70},
+    {c:"k",d:"M15 0V100,M65 5L10 50L65 95",w:75},
+    {c:"l",d:"M20 0V100,M10 90L70 92",w:80},
+    {c:"m",d:"M20 0V100,M80 0V100,M10 6L47 46L90 3",w:100},
+    {c:"n",d:"M20 0V100,M80 0V100,M10 6L90 93",w:90},
+    {c:"o",d:"M50 7L10 50L50 93L90 50Z",w:100},
+    {c:"p",d:"M10 65L60 35L10 5,M20 0V100",w:70},
+    {c:"q",d:"M50 7L10 50L50 93L90 50Z,M50 50L90 90",w:100},
+    {c:"r",d:"M18 0L16 100,M21 49L60 96,M10 55L55 31L10 8",w:70},
+    {c:"s",d:"M75 30L35 5M33 96L72 63L15 34L53 3M10 69L52 95",w:90},
+
+    {c:"t",d:"M0 5L70 8, M35 0V100",w:80},
+    {c:"u",d:"M3 52L40 92L85 51,M80 67L74 0,M7 71L13 0",w:90},
+    {c:"v",d:"M35 97L76 5,M48 97L4 2",w:90},
+    {c:"w",d:"M31 97L5 1,M72 94L84 4,M21 94L51 50L85 91",w:100},
+    {c:"x",d:"M76 96L3 4,M4 96L76 6",w:90},
+    {c:"y",d:"M47 51L10 5,M30 51L64 3,M37 40L37 100",w:80},
+    {c:"z",d:"M77 97L14 3M87 89L10 87M80 18L10 14",w:90},
+    {c:"0",d:"M80 32L52 7L10 50L52 92L80 67",w:90},
+    {c:"1",d:"M80 32L52 7L10 50L52 92L80 67",w:90},
+    {c:"2",d:"M80 32L52 7L10 50L52 92L80 67",w:90},
+    {c:"3",d:"M80 32L52 7L10 50L52 92L80 67",w:90},
+    {c:"4",d:"M80 32L52 7L10 50L52 92L80 67",w:90},
+    {c:"5",d:"M80 32L52 7L10 50L52 92L80 67",w:90},
+    {c:"6",d:"M80 32L52 7L10 50L52 92L80 67",w:90},
+    {c:"7",d:"M80 32L52 7L10 50L52 92L80 67",w:90},
+    {c:"8",d:"M80 32L52 7L10 50L52 92L80 67",w:90},
+    {c:"9",d:"M80 32L52 7L10 50L52 92L80 67",w:90},
+    {c:"!",d:"M10 0V80,M10 85V3",w:30},
+    {c:"?",d:"M80 32L52 7L10 50L52 92L80 67",w:90},
+    {c:".",d:"M80 32L52 7L10 50L52 92L80 67",w:90},
+]
+
 //entity skin colors
 let skinColors = ["#7a5229","#c67f54","#763a21","#431b14","#a0472d"]
 let featherColors = ["#631c0f","#272863","#440f57"]
 let armourColors = [["#7a5b23","#a47e3c"],["#4e4e4e","#767676"],["#784b40","#A57164"]]
 
+
+let transitionCircleRadius = 0
+let transitionEvent = "!"
+
+let scores = []
+
+//Menues
 
 let mainMenu = {
     buttons:[
@@ -82,6 +137,9 @@ let mainMenu = {
         ctx.fillText("Labyrinth Of Death", 200, 20)
 
         dButtons(this.buttons)
+
+        drawText("The Quick Brown Fox Jumps Over The Lazy Dog!?",100,100,0.1,"red")
+        drawText("3.14159265 35897932 38462643 38327950",100,150,0.1,"red") 
     },
     update(){
         cButtons(this.buttons)
@@ -110,6 +168,10 @@ let hsMenu = {
     ],
     draw(){
         ctx.fillText("Highscores", 200, 20)
+
+        for(let i =0; i<scores.length; i++){
+            ctx.fillText(scores[i],200,200+i*50)
+        }
 
         dButtons(this.buttons)
     },
@@ -166,12 +228,22 @@ let eMenu = {
         {t:"Highscores",x:75,y:600,w:200,h:30,a:"hs"},
         {t:"Main Menu",x:425,y:600,w:200,h:30,a:"m"}
     ],
+    score:null,
     draw(){
-        ctx.fillText("Win", 200, 20)
+        if(player.dead){
+            ctx.fillText("You Lose", 200, 20)
+        }else{
+            ctx.fillText("You Win", 200, 20)
+        }
+        
+        ctx.fillText(this.score, 200, 300)
 
         dButtons(this.buttons)
     },
     update(){
+        if(this.score == null){
+            this.score = calculateScore()
+        }
         cButtons(this.buttons)
     },
 }
@@ -201,6 +273,7 @@ let ccMenu = {
         for(let i = 0; i < 700; i+= 88){
             draw(5,i,30,2)
         }
+        
         ctx.fillStyle = "black"
         ctx.globalAlpha = 0.3
         ctx.fillRect(0,0,700,700)
@@ -213,29 +286,8 @@ let ccMenu = {
         ctx.fillRect(120,345,70,70)
         ctx.fillStyle = skinColors[this.sC]
         ctx.fillRect(120,440,70,70)
-
-        ctx.save()
-        ctx.translate(310,250)
-        ctx.scale(2,2)
-
-        ctx.globalAlpha = 0.2
-        ctx.fillStyle = "#000000"
-        ctx.fillRect(-10,127,65,20)
-        ctx.globalAlpha = 1
-    
-        draw(16,0,30+this.offset,0.5)
-
-        draw(56+this.sC,-4,110,0.5)
-        draw(56+this.sC,16,110,0.5)
-
-        draw(53+this.fC,0,30+this.offset,0.5)
-
-        draw(17+this.aC*12+this.fC*4+this.sC,0,-20-this.offset,0.5)
-
-        ctx.fillStyle = skinColors[this.sC]
-        ctx.fillRect(16,71,18,18)
-
-        ctx.restore()
+        
+        drawCharacter(310,250,"left",this.offset,this.fC,this.aC,this.sC,0,0,0,2)
 
 
         dButtons(this.buttons)
@@ -244,28 +296,34 @@ let ccMenu = {
 
         if(this.buttons[1].c){
             this.fC ++
+            if(this.fC > 2){
+                this.fC = 0
+            }
+            localStorage.setItem('LOD_SKIN', JSON.stringify({f:this.fC,a:this.aC,s:this.sC}));
             this.buttons[1].c = false
         }
 
         if(this.buttons[2].c){
             this.aC ++
+            if(this.aC > 2){
+                this.aC = 0
+            }
+            localStorage.setItem('LOD_SKIN', JSON.stringify({f:this.fC,a:this.aC,s:this.sC}));
             this.buttons[2].c = false
         }
 
         if(this.buttons[3].c){
             this.sC ++
+            if(this.sC > 3){
+                this.sC = 0
+            }
+            localStorage.setItem('LOD_SKIN', JSON.stringify({f:this.fC,a:this.aC,s:this.sC}));
             this.buttons[3].c = false
         }
 
-        if(this.aC > 2){
-            this.aC = 0
-        }
-        if(this.fC > 2){
-            this.fC = 0
-        }
-        if(this.sC > 3){
-            this.sC = 0
-        }
+        
+        
+        
 
         if(Math.abs(this.offset) > 0.5){
             this.offsetVel = -this.offsetVel
@@ -293,6 +351,19 @@ window.onload = () => {
 
     createSpriteSheet()
 
+    let skin = JSON.parse(localStorage.getItem('LOD_SKIN'))
+
+    if(skin){
+        ccMenu.fC = parseInt(skin.f)
+        ccMenu.aC = parseInt(skin.a)
+        ccMenu.sC = parseInt(skin.s)
+    }
+
+    let cScores = JSON.parse(localStorage.getItem('LOD_SCORES'))
+
+    if(cScores){
+        scores = cScores
+    }
 
     gameLoop()
     document.title = "Labyrinth Of Death"
@@ -364,12 +435,6 @@ function gameLoop(){
     ctx.save()
     ctx.scale(sF,sF)
 
-    if(map.shake){
-        var dx = Math.random()*10;
-        var dy = Math.random()*10;
-        ctx.translate(dx, dy); 
-    }
-
     switch(menu){
         case "m":
             mainMenu.draw()
@@ -414,6 +479,21 @@ function gameLoop(){
         draw(7,50,50,0.5)
     }
 
+    if(transitionEvent != "!"){
+        transitionCircleRadius += 15
+        ctx.fillStyle = "black"
+        ctx.beginPath()
+        ctx.arc(350,350,transitionCircleRadius,0,Math.PI*2)
+        ctx.fill()
+        ctx.closePath()
+
+        if(transitionCircleRadius > 700){
+            menu = transitionEvent
+            transitionEvent = "!"
+            transitionCircleRadius = 0
+        }
+    }
+
     ctx.restore()
 
 
@@ -423,6 +503,8 @@ function gameLoop(){
             click = 0
         }
     }
+
+    
 
     window.requestAnimationFrame(gameLoop)
 }
@@ -457,12 +539,13 @@ class Cell{
 
         if(this.j == map.size-1){
             this.wallD[1][1] = map.ts
+            this.wallD[0][1] += 1
         }
     }
 
     //draw walls
     drawW(e){
-        if(this.i == player.i && player.j == this.j-1){
+        if(this.i == player.i && player.j == this.j-1 && this.j != 0){
             this.alphaT -= 0.02           
         }else if(this.i == player.i && player.j == this.j){
             this.alphaB -= 0.02
@@ -488,17 +571,42 @@ class Cell{
         let w = this.wallD[e%2][0]
         let h = this.wallD[e%2][1]
 
+        if(this.j == map.size-1){
+            h *= 5
+        }
+
         if(e == 0 || e == 2){
 
-            ctx.fillStyle = "#3e3e3e"
+
+
+            
             if(this.exit == e){
-                ctx.fillRect(x,y-145,w,h)
+
+                ctx.fillStyle = "#621c10"
+                ctx.fillRect(x,y-145,w,this.j==19?h/5-3:h-3)
+                ctx.fillStyle = "#7a2d1a"
+                ctx.fillRect(x,y-145,w,this.j==19?h/5-15:h-15)
+
+                // if(this.edges[1]){
+                //     ctx.fillStyle = "#1a1a1a"
+                //     ctx.fillRect(x+w-45,y-107,45,300)
+                // }
+
+                draw(10,x+w/2-40,y-145,0.4)
+
+                if(e==2){
+                    ctx.fillStyle = "#1a1a1a"
+                    ctx.globalAlpha = this.alphaB
+                    ctx.fillRect(x-2,y-107,w+4,300)
+                }
                 ctx.globalAlpha = 1
                 return
             }
 
+
             if(this.alphaT < 1 || this.alphaB < 1){
-                ctx.fillRect(x,y,w,h)
+                ctx.fillStyle = "#3e3e3e"
+                ctx.fillRect(x,y,w,this.j==19?h/5:h)
             }
 
             if(e==0){
@@ -512,20 +620,31 @@ class Cell{
             for(let i = this.wallP[e][0]-1; i < this.wallP[e][0]+w; i+=44){
                 draw(5,map.x+i,y-145)
             }
+
+            if(this.j == 19 && e==2){
+                ctx.fillStyle = "#1a1a1a"
+                ctx.fillRect(x-2,y-107,w+4,300)
+            }
         }else{
             ctx.fillStyle = "#7a2d1a"
 
-            if(this.exit == e){
-                ctx.fillStyle = "#3e3e3e"
-            }
-
             ctx.fillRect(x-1,y-145,w+2,h-15)
+
+            if(this.exit == e){
+
+                ctx.save()
+                ctx.translate(x,y)
+                ctx.rotate(Math.PI/2)
+                draw(10,0,-38,0.4)
+                ctx.restore()
+            }
 
             draw(5,x,y+h-190)
         }
 
         ctx.globalAlpha = 1
     }
+    //draw floor pattern
     drawF(){
         if(this.pattern > 3){
             return
@@ -589,8 +708,10 @@ class Cell{
         this.wallP = [[this.x,this.y],[this.x+map.ts-map.ws,this.y],[this.x,this.y+map.ts-map.ws],[this.x,this.y]]
 
         for (let i = 0; i<this.edges.length;i++) {
-            if (this.edges[i] && !this.open) {
-                this.collision(player, i)
+            if (this.edges[i]) {
+                if(i != this.exit || !this.open){
+                    //this.collision(player, i)
+                }
             }
         }
     }
@@ -618,8 +739,7 @@ class Cell{
                     for(let i =0; i<exitCoords.length; i++){
                         cells[exitCoords[i][0]][exitCoords[i][1]].open = true
                     }
-                    map.shake = true
-                    setTimeout(()=>{map.shake=false},1500)
+                    shake(1500)
                 }
                 
                 return;
@@ -644,8 +764,7 @@ class Cell{
                     for(let i =0; i<exitCoords.length; i++){
                         cells[exitCoords[i][0]][exitCoords[i][1]].open = true
                     }
-                    map.shake = true
-                    setTimeout(()=>{map.shake=false},1500)
+                    shake(1500)
                 }
 
                 return;
@@ -671,8 +790,7 @@ class Cell{
                     for(let i =0; i<exitCoords.length; i++){
                         cells[exitCoords[i][0]][exitCoords[i][1]].open = true
                     }
-                    map.shake = true
-                    setTimeout(()=>{map.shake=false},1500)
+                    shake(1500)
                 }
 
                 return
@@ -695,8 +813,7 @@ class Cell{
                     for(let i =0; i<exitCoords.length; i++){
                         cells[exitCoords[i][0]][exitCoords[i][1]].open = true
                     }
-                    map.shake = true
-                    setTimeout(()=>{map.shake=false},1500)
+                    shake(1500)
                 }
 
                 return
@@ -704,7 +821,7 @@ class Cell{
             }
 
         }
-        }
+    }
 
     //gets walls for drawing
     getWalls () {
@@ -746,7 +863,7 @@ let player = {
     height: 140,
 
     acc: 0.5,
-    fric: 0.87,
+    fric: 0.95,
 
     attack: false,
     lastDir: "",
@@ -765,78 +882,19 @@ let player = {
     armRotation:0,
     armVel:0.7,
 
+    indicatorX:0,
+
     sC:0,
     fC:0,
     aC:0,
 
     dead:false,
+    escape:false,
 
     canHit: true,
 
     draw () {
-
-        ctx.save()
-        ctx.translate(this.cX,this.cY)
-
-        if(this.lastDir == "right"){
-            ctx.translate(this.width,0)
-            ctx.scale(-1,1)
-        }
-
-        draw(16,0,30+this.offset,0.5)
-
-
-
-        ctx.globalAlpha = 0.2
-        ctx.fillStyle = "#000000"
-        ctx.fillRect(-10,127,65,20)
-        ctx.globalAlpha = 1
-        
-
-
-        ctx.save()
-        ctx.translate(10,100)
-        ctx.rotate(this.legRotation*(Math.PI/180))
-
-        draw(56+this.sC,-14,10,0.5)
-        ctx.restore()
-
-        ctx.save()
-        ctx.translate(33,100)
-        ctx.rotate(-this.legRotation*(Math.PI/180))
-
-        draw(56+this.sC,-17,10,0.5)
-        ctx.restore()
-
-
-
-        draw(53+this.fC,0,30+this.offset,0.5)
-        draw(17+this.aC*12+this.fC*4+this.sC,0,-20-this.offset,0.5)
-
-        
-        for(let i = 0; i < 3; i++){
-            if(swords[i].collect){
-                swords[i].draw()
-            }
-        }
-
-        ctx.save()
-        ctx.fillStyle = skinColors[this.sC]
-
-        if(swords[0].collect || swords[1].collect || swords[2].collect){
-            ctx.translate(-10,80)
-            ctx.rotate(Math.sign(swords[0].rotate)*-swords[0].rotate*(Math.PI/180))
-            ctx.fillRect(-9,-9,18,18)
-        }else{
-            ctx.translate(25,40)
-            ctx.rotate(-this.armRotation*(Math.PI/180))
-            ctx.fillRect(-9,31,18,18)
-        }
-        ctx.restore()
-
-        
-        ctx.restore()
-        
+        drawCharacter(this.cX,this.cY,this.lastDir,this.offset,this.fC,this.aC,this.sC,this.legRotation,this.armRotation,1)
     },
     move () {
 
@@ -910,15 +968,29 @@ let player = {
         }
         
     },
-    isDead(){
+    hasWOrL(){
         if(this.health <= 0){
             this.dead = true
-            //console.log("dead")
+            gameEnd = new Date()
+
+            setTimeout(()=>{transitionEvent = "e";map.shake = false},2500)
+        }
+
+        if(this.indicatorX >= 100){
+            this.escape = true
+            gameEnd = new Date()
+            setTimeout(()=>{transitionEvent = "e";map.shake = false},2500)
+        }
+
+        if(this.i < 0 || this.j < 0 || this.i > 19 || this.j > 19){
+            this.indicatorX += 0.5
+        }else{
+            this.indicatorX = 0;
         }
     }
 }
 
-//Sword (Need to figure out w & h)
+//Sword
 class Sword{
     constructor(i,j,c){
         this.x = i*map.ts
@@ -949,7 +1021,7 @@ class Sword{
                 this.rotate -= 4
             }
 
-            if(Math.abs(this.rotate) == 104 || !player.attack){
+            if(Math.abs(this.rotate) == 120 || !player.attack){
                 this.swing = false
             }
 
@@ -958,7 +1030,7 @@ class Sword{
             }
 
             if(player.attack && this.swing && swords[0].collect && swords[1].collect && swords[2].collect){
-                this.rotate += 8
+                this.rotate += 24
             }
 
             let sX = player.x-12
@@ -995,12 +1067,12 @@ class Sword{
         
         if(this.component == 0){
             if(this.collect){
-                draw(10,-18,30)
+                draw(11,-18,30)
             }else{
                 this.height = 147
                 ctx.save()
                 ctx.rotate(-.17)
-                draw(10,20,5)
+                draw(11,20,5)
                 ctx.restore()
                 ctx.shadowBlur = 0;
                 
@@ -1010,10 +1082,10 @@ class Sword{
         }
         if(this.component == 1){
             if(this.collect){
-                draw(11, -58, -40)
+                draw(12, -58, -40)
             }else{
                 this.height = 49
-                draw(11,20,0)
+                draw(12,20,0)
                 ctx.shadowBlur = 0;
                 draw(0,0,40)
             }
@@ -1021,10 +1093,10 @@ class Sword{
         
         if(this.component == 2){
             if(this.collect){
-                draw(12,-12,-65)
+                draw(13,-12,-65)
             }else{
                 this.height = 40
-                draw(12,50,0)
+                draw(13,50,0)
                 ctx.shadowBlur = 0;
                 draw(0,0,20)
             }
@@ -1060,6 +1132,7 @@ let key = {
     }
 }
 
+//NPC class
 class NPC {
     constructor(i,j,s,cI) {
 
@@ -1112,62 +1185,12 @@ class NPC {
 
     draw () {
         if(!this.dead){
-
-            ctx.save()
-            ctx.translate(map.x+this.x,map.y+this.y)
-
-            if(this.lastDir == "right"){
-                ctx.translate(this.width,0)
-                ctx.scale(-1,1)
-            }
-
-            draw(16,0,30+this.offset,0.5)
-
-
-            ctx.globalAlpha = 0.2
-            ctx.fillStyle = "#000000"
-            ctx.fillRect(-10,127,65,20)
-            ctx.globalAlpha = 1
-
-            ctx.shadowColor = '#0000004d';
-            ctx.shadowBlur = 3;
-
-
-
-            ctx.save()
-            ctx.translate(10,100)
-            ctx.rotate(this.legRotation*(Math.PI/180))
-
-            draw(56+this.sC,-14,10,0.5)
-            ctx.restore()
-
-            ctx.save()
-            ctx.translate(33,100)
-            ctx.rotate(-this.legRotation*(Math.PI/180))
-
-            draw(56+this.sC,-17,10,0.5)
-            ctx.restore()
-
-
-            ctx.shadowBlur = 0;
-
-            draw(53+this.fC,0,30+this.offset,0.5)
-            draw(17+this.aC*12+this.fC*4+this.sC,0,-20-this.offset,0.5)
-
-            ctx.save()
-            ctx.fillStyle = skinColors[this.sC]
-            ctx.translate(25,40)
-            ctx.rotate(-this.armRotation*(Math.PI/180))
-            ctx.fillRect(-9,31,18,18)
-            ctx.restore()
-
-            
-            ctx.restore()
+            drawCharacter(map.x+this.x,map.y+this.y,this.lastDir,this.offset,this.fC,this.aC,this.sC,this.legRotation,this.armRotation)
         }
     }
 
     move() {
-        if(this.dir != undefined){
+        if(this.dir != undefined && !this.dead){
             if (this.dir == 0) { this.yVel -= this.acc;}
 
             if (this.dir == 1) { this.xVel += this.acc;this.lastDir = "right"}
@@ -1335,7 +1358,7 @@ class NPC {
 
                 switch(dirs[dir]){
                     case 0:
-                        this.destination.y = (this.j-0.5)*map.ts
+                        this.destination.y = (this.j-(this.escape ? 1.5 : 0.5))*map.ts
                         break;
                     case 1:
                         this.destination.x = (this.i+1.5)*map.ts
@@ -1372,6 +1395,7 @@ class NPC {
     }
 }
 
+//minotaur
 let minotaur = {
     x:0,
     y:0,
@@ -1406,61 +1430,13 @@ let minotaur = {
 
     axeRotation:0,
     swing:false,
+
+    sleep:true,
     dead: false,
 
     draw () {
         if(this.health > 0){
-            ctx.save()
-            ctx.translate(this.x+map.x,this.y+map.y)
-
-            if(this.lastDir == "left"){
-                ctx.translate(this.width,0)
-                ctx.scale(-1,1)
-            }
-
-            ctx.globalAlpha = 0.2
-            ctx.fillStyle = "#000000"
-            ctx.fillRect(0,260,90,30)
-            ctx.globalAlpha = 1
-
-            ctx.fillStyle = "#a0472d"
-
-            ctx.save()
-            ctx.scale(-1,1)
-            ctx.translate(-50,190)
-            ctx.rotate(this.legRotation*(Math.PI/180))
-            ctx.fillRect(5,5,18,40)
-            draw(60,-14,40,0.8)
-            ctx.restore()
-
-            ctx.save()
-            ctx.scale(-1,1)
-            ctx.translate(-65,190)
-            ctx.rotate(-this.legRotation*(Math.PI/180))
-            ctx.fillRect(1,5,18,40)
-            draw(60,-17,40,0.8)
-            ctx.restore()
-
-            draw(14,-5,83-this.offset,0.75)
-
-
-            draw(13,-40,-40+this.offset,0.7)
-
-
-
-
-            ctx.save()
-            ctx.scale(-1,1)
-            ctx.translate(-105,140)
-            ctx.rotate(-this.axeRotation*(Math.PI/180))
-
-            draw(15,-45,-140-this.offset,1.1)
-
-            ctx.fillRect(-15,-15,30,30)
-            
-            ctx.restore()
-
-            ctx.restore()
+            drawMinotaur(map.x+this.x,map.y+this.y,this.lastDir,this.offset,this.legRotation,this.axeRotation,this.sleep)
         }
     },
     axeSwing(){
@@ -1713,18 +1689,17 @@ function dButtons(b){
         ctx.strokeRect(button.x,button.y,button.w,button.h)
     });
 }
-
 //collision for buttons
 function cButtons(b){
     b.forEach(button => {
-        if(click){
+        if(click && transitionEvent == "!"){
             if(click.x > button.x && click.x < button.x+button.w && click.y > button.y && click.y < button.y+button.h){
                 
                 if(button.a == "!"){
                     button.c = true
                     click = 0
                 }else{
-                    menu = button.a
+                    transitionEvent = button.a
                     click = 0
                 }
 
@@ -1837,7 +1812,6 @@ function generateMap(){
         }
     }
 }
-
 //distance function
 function findDistance(cell, point){
     let distX = point.i-cell.i
@@ -1845,7 +1819,6 @@ function findDistance(cell, point){
 
     return Math.sqrt(distX**2 + distY**2)
 }
-
 //RNG
 function randInt(max, min = 0){
     return Math.floor(Math.random() * (max - min)) + min
@@ -2031,7 +2004,8 @@ function circleRect(cx, cy, radius, rx, ry, rw, rh) {
 function startGame(){
     //character stuff
     player.health = 3
-    player.dead = false
+    player.dead = player.escape = false
+    player.indicatorX = 0
     player.fC = ccMenu.fC
     player.aC = ccMenu.aC
     player.sC = ccMenu.sC
@@ -2064,6 +2038,8 @@ function startGame(){
     minotaur.destination.x = minotaur.destination.y = minotaur.x = minotaur.y = 10.5*map.ts
     minotaur.x -= minotaur.width/2
     minotaur.y -= minotaur.height
+    minotaur.sleep = true
+    minotaur.dir = undefined
 
     //npc stuff
     npcs = []
@@ -2078,14 +2054,47 @@ function startGame(){
     
     generateMap()
 
-    menu = ""
+    transitionEvent = ""
+    gameStart = new Date()
+
+    setTimeout(()=>{
+        console.log("5")
+    },1000)
+
+    setTimeout(()=>{
+        console.log("4")
+    },2000)
+
+    setTimeout(()=>{
+        console.log("3")
+    },3000)
+
+    setTimeout(()=>{
+        console.log("2")
+    },4000)
+
+    setTimeout(()=>{
+        console.log("1")
+    },5000)
+
+    setTimeout(()=>{
+        
+        minotaur.sleep = false
+        shake(1000)
+    },6000)
 }
 //draws game
 function drawGame(){
 
+    ctx.save()
+    if(map.shake){
+        var dx = Math.random()*10;
+        var dy = Math.random()*10;
+        ctx.translate(dx, dy); 
+    }
     //base layer (no draw order)
     ctx.fillStyle = "gray"
-    ctx.fillRect(map.x,map.y,map.size*map.ts,map.size*map.ts)
+    ctx.fillRect(map.x,map.y-145,map.size*map.ts,map.size*map.ts+145)
 
     for(let i =0; i<map.size; i++){
         for(let j = 0; j<map.size; j++){
@@ -2095,10 +2104,7 @@ function drawGame(){
 
     //everything after this has a draw order
 
-    let drawableObjects = collectDrawableObjects() //returns {y,type,index if needed, i/j/edge if needed}
-
-    //draw objects
-    drawableObjects.forEach((dObject)=>{
+    collectDrawableObjects().forEach((dObject)=>{
         switch(dObject.t){
             case "p":
                 player.draw()
@@ -2120,12 +2126,28 @@ function drawGame(){
                 break
         }
     })
+
+    //hide stuff outside map
+    ctx.fillStyle = "#1a1a1a"
+    ctx.fillRect(map.x-700,map.y-845,map.size*map.ts+1400,700)
+    ctx.fillRect(map.x-700,map.y-845,700,map.size*map.ts+1400)
+    ctx.fillRect(map.x+map.size*map.ts,map.y-845,700,map.size*map.ts+1400)
+    ctx.fillRect(map.x-700,map.y+map.size*map.ts,map.size*map.ts+1400,700)
+
+    ctx.fillStyle = "white"
+    ctx.fillRect(map.x+player.x-25,map.y+player.y-20,player.indicatorX,10)
+
+    ctx.restore()
 }
 //updates game
 function updateGame(){
 
+    if(player.dead || player.escape){
+        return
+    }
+
     player.move()
-    player.isDead()
+    player.hasWOrL()
 
     for(let i =0; i<map.size; i++){
         for(let j = 0; j<map.size; j++){
@@ -2133,9 +2155,11 @@ function updateGame(){
         }
     }
 
-    minotaur.axeSwing()
-    //minotaur.AI()
-    //minotaur.move()
+    if(!minotaur.sleep){
+        minotaur.axeSwing()
+        minotaur.AI()
+    }
+    minotaur.move()
 
     key.collision()
 
@@ -2197,6 +2221,231 @@ function isInBounds(x,y,w,h){
         return true
     }
     return false
+}
+//shake canvas
+function shake(ms){
+    map.shake = true;
+    setTimeout(()=>{
+        map.shake = false;
+    },ms)
+}
+//calculates score
+function calculateScore(){
+    let pH = player.health/3
+    let mH = minotaur.health/100
+
+    let dNPCs = 0
+    let eNPCs = 0
+
+    for(let i =0; i<npcs.length; i++){
+        if(npcs[i].dead){
+            dNPCs++
+        }else if(npcs[i].escape){
+            eNPCs++
+        }
+    }
+
+    let time = (gameStart - gameEnd)/100000
+
+    let score = (Math.pow(10,-0.05*time)*100000 - dNPCs*1000 + eNPCs*3000 - 10000*mH)*(1+pH)
+
+    if(mH == 0){
+        score *= 1.5
+    }
+
+    if(pH == 0){
+        score = 30000 - dNPCs*1000 + eNPCs*3000 - 10000*mH
+    }
+
+    scores.push(score)
+
+    localStorage.setItem("LOD_SCORES",JSON.stringify(scores))
+
+    return score
+}
+//draws character
+function drawCharacter(x,y,lD,offset,fC,aC,sC,lR,aR,sword=false,scale=1){
+    ctx.save()
+    ctx.translate(x,y)
+
+    if(lD == "right"){
+        ctx.translate(45,0)
+        ctx.scale(-1,1)
+    }
+    ctx.scale(scale,scale)
+
+    draw(17,0,30+offset,0.5)
+
+
+
+    ctx.globalAlpha = 0.2
+    ctx.fillStyle = "#000000"
+    ctx.fillRect(-10,127,65,20)
+    ctx.globalAlpha = 1
+    
+
+
+    ctx.save()
+    ctx.translate(10,100)
+    ctx.rotate(lR*(Math.PI/180))
+
+    draw(57+sC,-14,10,0.5)
+    ctx.restore()
+
+    ctx.save()
+    ctx.translate(33,100)
+    ctx.rotate(-lR*(Math.PI/180))
+
+    draw(57+sC,-17,10,0.5)
+    ctx.restore()
+
+
+
+    draw(54+fC,0,30+offset,0.5)
+    draw(18+aC*12+fC*4+sC,0,-20-offset,0.5)
+
+    ctx.save()
+    ctx.fillStyle = skinColors[sC]
+
+    if(sword && (swords[0].collect || swords[1].collect || swords[2].collect)){
+        for(let i = 0; i < 3; i++){
+            if(swords[i].collect){
+                swords[i].draw()
+            }
+        }
+        ctx.translate(-10,80)
+        ctx.rotate(Math.sign(swords[0].rotate)*-swords[0].rotate*(Math.PI/180))
+        ctx.fillRect(-9,-9,18,18)
+    }else{
+        ctx.translate(25,40)
+        ctx.rotate(-aR*(Math.PI/180))
+        ctx.fillRect(-9,31,18,18)
+    }
+    ctx.restore()
+
+    
+    ctx.restore()
+}
+//draws minotaur
+function drawMinotaur(x,y,lD,offset,lR,aR,sleep=0,scale=1){
+    ctx.save()
+    ctx.translate(x,y)
+    ctx.scale(scale,scale)
+
+    if(sleep){
+        minotaur.width = 230
+        minotaur.height = 125
+        ctx.fillStyle = "#0000001f"
+        ctx.fillRect(-10,145,230,20)
+
+        ctx.fillStyle = "#a0472d"
+        
+        ctx.beginPath()
+        ctx.arc(100,155,100,Math.PI,0)
+        ctx.fill()
+        ctx.closePath()
+        
+
+        ctx.save()
+        ctx.translate(145,offset)
+        ctx.rotate(20*(Math.PI/180))
+        ctx.shadowBlur = 10
+        ctx.shadowColor = "#0000001f"
+        draw(14,0,0,0.7)
+        ctx.shadowBlur = 0
+
+        ctx.fillRect(75,54,30,28)
+
+        ctx.fillStyle = "#852610"
+        ctx.fillRect(80,68,20,4)
+        ctx.restore()
+        ctx.restore()
+        return
+    }
+
+    minotaur.width=80
+    minotaur.height=250
+
+    if(lD == "left"){
+        ctx.translate(80,0)
+        ctx.scale(-1,1)
+    }
+
+    ctx.globalAlpha = 0.2
+    ctx.fillStyle = "#000000"
+    ctx.fillRect(0,260,90,30)
+    ctx.globalAlpha = 1
+
+    ctx.fillStyle = "#a0472d"
+
+    ctx.save()
+    ctx.scale(-1,1)
+    ctx.translate(-50,190)
+    ctx.rotate(lR*(Math.PI/180))
+    ctx.fillRect(5,5,18,40)
+    draw(61,-14,40,0.8)
+    ctx.restore()
+
+    ctx.save()
+    ctx.scale(-1,1)
+    ctx.translate(-65,190)
+    ctx.rotate(-lR*(Math.PI/180))
+    ctx.fillRect(1,5,18,40)
+    draw(61,-17,40,0.8)
+    ctx.restore()
+
+    draw(15,-5,83-offset,0.75)
+
+
+    draw(14,-40,-40+offset,0.7)
+
+
+
+
+    ctx.save()
+    ctx.scale(-1,1)
+    ctx.translate(-105,140)
+    ctx.rotate(-aR*(Math.PI/180))
+
+    draw(16,-45,-140-offset,1.1)
+
+    ctx.fillRect(-15,-15,30,30)
+    
+    ctx.restore()
+
+    ctx.restore()
+}
+//draws text
+function drawText(t,x,y,scale,color,lw=15){
+    t = t.toLowerCase()
+
+    ctx.save()
+    ctx.translate(x,y)
+    ctx.scale(scale,scale)
+
+    ctx.strokeStyle = color
+    ctx.lineWidth = lw
+
+    let currentX = 0
+
+    for(let i = 0; i<t.length; i++){
+        let j = alphabet.findIndex(p => p.c == t[i]);
+
+        let letter = alphabet[j].d.split(",")
+
+        for(let l = 0; l<letter.length; l++){
+            ctx.save()
+            ctx.translate(currentX,0)
+            ctx.beginPath()
+            ctx.stroke(new Path2D(letter[l]))
+            ctx.closePath()
+            ctx.restore()
+        }
+        currentX += alphabet[j].w
+    }
+
+    ctx.restore()
+
 }
 
 //remove
