@@ -66,46 +66,47 @@ let data = [
 
 let alphabet = [
     {c:" ",d:"",w:100},
-    {c:"a",d:"M50 0L10 100L90 100Z",w:100},
+    {c:"a",d:"M50 5L10 95L90 95Z",w:100},
     {c:"b",d:"M10 0L10 100L60 70L18 50L60 30Z",w:70},
     {c:"c",d:"M85 32L55 0L10 50L55 100L85 67",w:95},
     {c:"d",d:"M10 0L10 100L80 50Z",w:90},
     {c:"e",d:"M80 10L10 10L50 50L10 95L80 90",w:90},
-    {c:"f",d:"M70 0L20 4L20 100,M60 43L10 49",w:90},
+    {c:"f",d:"M70 0L20 4L20 100M60 43L10 49",w:90},
     {c:"g",d:"M83 30L55 0L10 50L55 100L85 60L49 60",w:100},
-    {c:"h",d:"M20 0V100,M70 0V100,M10 50L80 44",w:90},
-    {c:"i",d:"M40 0V100,M70 92L10 90,M10 10L70 7",w:80},
+    {c:"h",d:"M20 0V100M70 0V100M10 50L80 44",w:90},
+    {c:"i",d:"M40 0V100M70 92L10 90M10 10L70 7",w:80},
     {c:"j",d:"M50 0L60 70L35 93L10 70",w:70},
-    {c:"k",d:"M15 0V100,M65 5L10 50L65 95",w:75},
-    {c:"l",d:"M20 0V100,M10 90L70 92",w:80},
-    {c:"m",d:"M20 0V100,M80 0V100,M10 6L47 46L90 3",w:100},
-    {c:"n",d:"M20 0V100,M80 0V100,M10 6L90 93",w:90},
+    {c:"k",d:"M15 0V100M65 5L10 50L65 95",w:75},
+    {c:"l",d:"M20 0V100M10 90L70 92",w:80},
+    {c:"m",d:"M20 0V100M80 0V100M10 6L47 46L90 3",w:100},
+    {c:"n",d:"M20 0V100M80 0V100M10 6L90 93",w:90},
     {c:"o",d:"M50 7L10 50L50 93L90 50Z",w:100},
-    {c:"p",d:"M10 65L60 35L10 5,M20 0V100",w:70},
-    {c:"q",d:"M50 7L10 50L50 93L90 50Z,M50 50L90 90",w:100},
-    {c:"r",d:"M18 0L16 100,M21 49L60 96,M10 55L55 31L10 8",w:70},
+    {c:"p",d:"M10 65L60 35L10 5M20 0V100",w:70},
+    {c:"q",d:"M50 7L10 50L50 93L90 50ZM50 50L90 90",w:100},
+    {c:"r",d:"M18 0L16 100M21 49L60 96M10 55L55 31L10 8",w:70},
     {c:"s",d:"M75 30L35 5M33 96L72 63L15 34L53 3M10 69L52 95",w:90},
-
-    {c:"t",d:"M0 5L70 8, M35 0V100",w:80},
-    {c:"u",d:"M3 52L40 92L85 51,M80 67L74 0,M7 71L13 0",w:90},
-    {c:"v",d:"M35 97L76 5,M48 97L4 2",w:90},
-    {c:"w",d:"M31 97L5 1,M72 94L84 4,M21 94L51 50L85 91",w:100},
-    {c:"x",d:"M76 96L3 4,M4 96L76 6",w:90},
-    {c:"y",d:"M47 51L10 5,M30 51L64 3,M37 40L37 100",w:80},
+    {c:"t",d:"M0 5L70 8M35 0V100",w:80},
+    {c:"u",d:"M3 52L40 92L85 51M80 67L74 0M7 71L13 0",w:90},
+    {c:"v",d:"M35 97L76 5M48 97L4 2",w:90},
+    {c:"w",d:"M31 97L5 1M72 94L84 4M21 94L51 50L85 91",w:100},
+    {c:"x",d:"M76 96L3 4M4 96L76 6",w:90},
+    {c:"y",d:"M47 51L10 5M30 51L64 3M37 40L37 100",w:80},
     {c:"z",d:"M77 97L14 3M87 89L10 87M80 18L10 14",w:90},
-    {c:"0",d:"M80 32L52 7L10 50L52 92L80 67",w:90},
-    {c:"1",d:"M80 32L52 7L10 50L52 92L80 67",w:90},
-    {c:"2",d:"M80 32L52 7L10 50L52 92L80 67",w:90},
-    {c:"3",d:"M80 32L52 7L10 50L52 92L80 67",w:90},
-    {c:"4",d:"M80 32L52 7L10 50L52 92L80 67",w:90},
-    {c:"5",d:"M80 32L52 7L10 50L52 92L80 67",w:90},
-    {c:"6",d:"M80 32L52 7L10 50L52 92L80 67",w:90},
-    {c:"7",d:"M80 32L52 7L10 50L52 92L80 67",w:90},
-    {c:"8",d:"M80 32L52 7L10 50L52 92L80 67",w:90},
-    {c:"9",d:"M80 32L52 7L10 50L52 92L80 67",w:90},
-    {c:"!",d:"M10 0V80,M10 85V3",w:30},
-    {c:"?",d:"M80 32L52 7L10 50L52 92L80 67",w:90},
-    {c:".",d:"M80 32L52 7L10 50L52 92L80 67",w:90},
+
+    {c:"0",d:"M32 3L6 30L9 87M21 3L55 30M49 20L49 72L28 93L3 75",w:70},
+    {c:"1",d:"M30 100L27 0M37 6L2 21",w:50},
+    {c:"2",d:"M8 98L56 22M53 32L40 6L22 6L3 31M58 95L3 95",w:75},
+    {c:"3",d:"M26 43L56 77M55 65L38 95L18 94L4 74M56 29L23 54M28 7L56 36M3 29L37 7",w:80},
+    {c:"4",d:"M45 0V100M0 41H52M6 52L20 2",w:70},
+    {c:"5",d:"M3 11L51 7M0 38L48 41M38 33L53 74M55 62L29 93L3.3 78M7 47L11 2",w:70},
+    {c:"6",d:"M6 51L31 39L55 52L55 80L31 94L5 78M10 83L6 46L13 7M6 16L50 5",w:70},
+    {c:"7",d:"M9 98L50 2M0 12H56",w:60},
+    {c:"8",d:"M5 75L54 20M5 60L36 94M3 33L29 8L54 33M3 21L51 65L29 92",w:70},
+    {c:"9",d:"M43 30L18 50M29 3L6 31L29 50M19 3L44 31M43 14L44 100",w:70},
+
+    {c:"!",d:"M0 0V70,M0 80L0 100",w:30},
+    {c:"?",d:"M17 80L17 100M20 73L18 44M13 58L43 32L23 7L3 22",w:90},
+    {c:".",d:"M0 80L0 100",w:10},
 ]
 
 //entity skin colors
@@ -134,12 +135,14 @@ let mainMenu = {
         draw(8,250,500,70/64)
         draw(9,380,500,70/64)
 
-        ctx.fillText("Labyrinth Of Death", 200, 20)
+        ctx.fillText("Labyrinth", 200, 20)
+
 
         dButtons(this.buttons)
 
-        drawText("The Quick Brown Fox Jumps Over The Lazy Dog!?",100,100,0.1,"red")
-        drawText("3.14159265 35897932 38462643 38327950",100,150,0.1,"red") 
+        drawText("Labyrinth",100,100,0.5,"red")
+        drawText("Of Death",150,170,0.5,"red")
+        drawText("3.14159265 35897932 38462643 38327950",100,250,0.1,"red") 
     },
     update(){
         cButtons(this.buttons)
@@ -1511,9 +1514,7 @@ let minotaur = {
                 this.path = aStar([this.i,this.j],[this.target.i,this.target.j])
                 this.path.pop()
             }
-        }
 
-        if(this.path.length > 0 && this.dir == undefined){
             let nextTile = this.path[this.path.length-1]
 
             if(nextTile.j != this.j){
@@ -1686,6 +1687,7 @@ function draw(imgIndex,posX,posY,scale=1){
 //draw buttons
 function dButtons(b){
     b.forEach(button => {
+        ctx.strokeStyle = "red"
         ctx.strokeRect(button.x,button.y,button.w,button.h)
     });
 }
@@ -2431,16 +2433,13 @@ function drawText(t,x,y,scale,color,lw=15){
     for(let i = 0; i<t.length; i++){
         let j = alphabet.findIndex(p => p.c == t[i]);
 
-        let letter = alphabet[j].d.split(",")
+        ctx.save()
+        ctx.translate(currentX,0)
+        ctx.beginPath()
+        ctx.stroke(new Path2D(alphabet[j].d))
+        ctx.closePath()
+        ctx.restore()
 
-        for(let l = 0; l<letter.length; l++){
-            ctx.save()
-            ctx.translate(currentX,0)
-            ctx.beginPath()
-            ctx.stroke(new Path2D(letter[l]))
-            ctx.closePath()
-            ctx.restore()
-        }
         currentX += alphabet[j].w
     }
 
