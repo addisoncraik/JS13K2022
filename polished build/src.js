@@ -1,3 +1,37 @@
+//music stuff
+zzfxM=(n,f,t,e=125)=>{let l,o,z,r,g,h,x,a,u,c,d,i,m,p,G,M=0,R=[],b=[],j=[],k=0,q=0,s=1,v={},w=zzfxR/e*60>>2;for(;s;k++)R=[s=a=d=m=0],t.map((e,d)=>{for(x=f[e][k]||[0,0,0],s|=!!f[e][k],G=m+(f[e][0].length-2-!a)*w,p=d==t.length-1,o=2,r=m;o<x.length+p;a=++o){for(g=x[o],u=o==x.length+p-1&&p||c!=(x[0]||0)|g|0,z=0;z<w&&a;z++>w-99&&u?i+=(i<1)/99:0)h=(1-i)*R[M++]/2||0,b[r]=(b[r]||0)-h*q+h,j[r]=(j[r++]||0)+h*q+h;g&&(i=g%1,q=x[1]||0,(g|=0)&&(R=v[[c=x[M=0]||0,g]]=v[[c,g]]||(l=[...n[c]],l[2]*=2**((g-12)/12),g>0?zzfxG(...l):[])))}m=G});return[b,j]}
+
+zzfx=(...t)=>zzfxP(zzfxG(...t))
+
+// zzfxP() - the sound player -- returns a AudioBufferSourceNode
+zzfxP=(...t)=>{let e=zzfxX.createBufferSource(),f=zzfxX.createBuffer(t.length,t[0].length,zzfxR);t.map((d,i)=>f.getChannelData(i).set(d)),e.buffer=f,e.connect(zzfxX.destination),e.start();return e}
+
+// zzfxG() - the sound generator -- returns an array of sample data
+zzfxG=(q=1,k=.05,c=220,e=0,t=0,u=.1,r=0,F=1,v=0,z=0,w=0,A=0,l=0,B=0,x=0,G=0,d=0,y=1,m=0,C=0)=>{let b=2*Math.PI,H=v*=500*b/zzfxR**2,I=(0<x?1:-1)*b/4,D=c*=(1+2*k*Math.random()-k)*b/zzfxR,Z=[],g=0,E=0,a=0,n=1,J=0,K=0,f=0,p,h;e=99+zzfxR*e;m*=zzfxR;t*=zzfxR;u*=zzfxR;d*=zzfxR;z*=500*b/zzfxR**3;x*=b/zzfxR;w*=b/zzfxR;A*=zzfxR;l=zzfxR*l|0;for(h=e+m+t+u+d|0;a<h;Z[a++]=f)++K%(100*G|0)||(f=r?1<r?2<r?3<r?Math.sin((g%b)**3):Math.max(Math.min(Math.tan(g),1),-1):1-(2*g/b%2+2)%2:1-4*Math.abs(Math.round(g/b)-g/b):Math.sin(g),f=(l?1-C+C*Math.sin(2*Math.PI*a/l):1)*(0<f?1:-1)*Math.abs(f)**F*q*zzfxV*(a<e?a/e:a<e+m?1-(a-e)/m*(1-y):a<e+m+t?y:a<h-d?(h-a-d)/u*y:0),f=d?f/2+(d>a?0:(a<h-d?1:(h-a)/d)*Z[a-d|0]/2):f),p=(c+=v+=z)*Math.sin(E*x-I),g+=p-p*B*(1-1E9*(Math.sin(a)+1)%2),E+=p-p*B*(1-1E9*(Math.sin(a)**2+1)%2),n&&++n>A&&(c+=w,D+=w,n=0),!l||++J%l||(c=D,v=H,n=n||1);return Z}
+
+// zzfxV - global volume
+zzfxV=.3
+
+// zzfxR - global sample rate
+zzfxR=44100
+
+// zzfxX - the common audio context
+zzfxX=new(window.AudioContext||webkitAudioContext);
+
+//song
+let songData = [[[,0,400,,.9],[2,,129,.01,,.15,,,,,,,,5],[.8,0,200,,.9]],[[[,,17,,17,12,12,11,12,,17,17,18,21,22,,,,17,,15,15,12,11,12,,17,19,18,21,22,,,,],[1,,1,,,1,1,13,1,,5,5,6,9,10,,,,1,,3,15,12,11,11,,5,17,5,17,29,,,,],[2,,17,,,15,12,11,12,,17,17,18,21,22,,,,17,,15,15,12,11,12,,17,19,18,21,22,,,,],[,1,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,]],[[,,22,,20,20,17,16,17,,24,26,25,28,29,,,,22,,22,20,17,16,17,,24,29,28,32,29,,,,],[1,,10,,,8,5,4,5,,5,17,5,17,29,,,,10,,10,8,5,4,5,,5,17,5,17,1,,,,],[2,,22,,20,20,17,16,17,,24,26,25,28,29,,,,22,,22,20,17,16,17,,24,29,28,32,29,,,,]]],[0,1],60]
+let songBuffer;
+let songNode;
+
+//sound effects
+let clickSFX;
+let collectSFX;
+let hitSFX;
+let wallSFX;
+let loseSFX;
+let winSFX;
+let swingSFX;
+
 //Where to store spritesheet
 const spriteSheet = new Image
 
@@ -135,14 +169,16 @@ let mainMenu = {
         draw(8,250,500,70/64)
         draw(9,380,500,70/64)
 
-        ctx.fillText("Labyrinth", 200, 20)
 
 
         dButtons(this.buttons)
 
+        drawText("Play",250,350,0.3,"red")
+        drawText("Controls",250,400,0.3,"red")
+        drawText("Credits",250,450,0.3,"red")
+
         drawText("Labyrinth",100,100,0.5,"red")
         drawText("Of Death",150,170,0.5,"red")
-        drawText("3.14159265 35897932 38462643 38327950",100,250,0.1,"red") 
     },
     update(){
         cButtons(this.buttons)
@@ -204,6 +240,7 @@ let bsMenu = {
     },
     update(){
         if(click){
+            zzfxP(clickSFX)
             click = false
             startGame()
             //start game
@@ -354,6 +391,17 @@ window.onload = () => {
 
     createSpriteSheet()
 
+    songBuffer = zzfxM(...songData) 
+
+    clickSFX = zzfxG(...[,0,63,.01,.06,.02,1,.6,3.7,-0.5,,,,,,,,.83,.01]);
+    collectSFX = zzfxG(...[,,539,0,.04,.29,1,1.92,,,567,.02,.02,,,,.04])
+    hitSFX = zzfxG(...[,,537,.02,.02,.22,1,1.59,-6.98,4.97])
+    wallSFX = zzfxG(...[,,333,.01,0,.9,4,1.9,,,,,,.5,,.6]);
+    loseSFX = zzfxG(...[,,925,.04,.3,.6,1,.3,,6.27,-184,.09,.17])
+    winSFX = zzfxG(...[,,20,.04,,.6,,1.31,,,-990,.06,.17,,,.04,.07])
+    swingSFX = zzfxG(...[,,150,.05,,.05,,1.3,,,,,,3]);
+
+
     let skin = JSON.parse(localStorage.getItem('LOD_SKIN'))
 
     if(skin){
@@ -503,6 +551,14 @@ function gameLoop(){
     if(click){
         if(click.x > 50 && click.y > 50 && click.x < 80.5 && click.y < 98){
             mute = !mute
+            if(mute && songNode){
+                songNode.stop()
+            }
+
+            if(!mute){
+                songNode = zzfxP(...songBuffer)
+                songNode.loop = true
+            }
             click = 0
         }
     }
@@ -713,7 +769,7 @@ class Cell{
         for (let i = 0; i<this.edges.length;i++) {
             if (this.edges[i]) {
                 if(i != this.exit || !this.open){
-                    //this.collision(player, i)
+                    this.collision(player, i)
                 }
             }
         }
@@ -739,6 +795,7 @@ class Cell{
                 map.y = object.cY-object.y
 
                 if(this.exit == 1 && key.collect){
+                    zzfxP(wallSFX)
                     for(let i =0; i<exitCoords.length; i++){
                         cells[exitCoords[i][0]][exitCoords[i][1]].open = true
                     }
@@ -764,6 +821,7 @@ class Cell{
                 map.y = object.cY-object.y
 
                 if(this.exit == 3 && key.collect){
+                    zzfxP(wallSFX)
                     for(let i =0; i<exitCoords.length; i++){
                         cells[exitCoords[i][0]][exitCoords[i][1]].open = true
                     }
@@ -790,6 +848,7 @@ class Cell{
                 map.y = object.cY-object.y
 
                 if(this.exit == 0 && key.collect){
+                    zzfxP(wallSFX)
                     for(let i =0; i<exitCoords.length; i++){
                         cells[exitCoords[i][0]][exitCoords[i][1]].open = true
                     }
@@ -813,6 +872,7 @@ class Cell{
                 map.y = object.cY-object.y
 
                 if(this.exit == 2 && key.collect){
+                    zzfxP(wallSFX)
                     for(let i =0; i<exitCoords.length; i++){
                         cells[exitCoords[i][0]][exitCoords[i][1]].open = true
                     }
@@ -866,7 +926,7 @@ let player = {
     height: 140,
 
     acc: 0.5,
-    fric: 0.95,
+    fric: 0.93,
 
     attack: false,
     lastDir: "",
@@ -963,6 +1023,7 @@ let player = {
     },
     hit(){
         if(this.canHit){
+            zzfxP(hitSFX)
             this.canHit = false
             map.shake = true
             console.log("hit")
@@ -974,6 +1035,7 @@ let player = {
     hasWOrL(){
         if(this.health <= 0){
             this.dead = true
+            zzfxP(loseSFX)
             gameEnd = new Date()
 
             setTimeout(()=>{transitionEvent = "e";map.shake = false},2500)
@@ -981,6 +1043,7 @@ let player = {
 
         if(this.indicatorX >= 100){
             this.escape = true
+            zzfxP(winSFX)
             gameEnd = new Date()
             setTimeout(()=>{transitionEvent = "e";map.shake = false},2500)
         }
@@ -1014,6 +1077,7 @@ class Sword{
 
         if(player.x+player.width > this.x && player.x < this.x + this.width && player.y + player.height > this.y && player.y+player.height < this.y + this.height){
             this.collect = true
+            zzfxP(collectSFX)
         }
 
         if(this.collect){
@@ -1049,6 +1113,7 @@ class Sword{
             if(lineRect(sX,sY,pX,pY,minotaur.x,minotaur.y,minotaur.width,minotaur.height) && minotaur.canTakeDmg && this.rotate != 0){
                 minotaur.health -= 20
                 minotaur.canTakeDmg = false
+                zzfxP(hitSFX)
                 setTimeout(()=>{minotaur.canTakeDmg = true},750)
             }
         }
@@ -1126,6 +1191,7 @@ let key = {
     collision(){
         if(player.x+player.width > this.x && player.x < this.x + 60 && player.y + player.height > this.y && player.y+player.height < this.y + 20){
             this.collect = true
+            zzfxP(collectSFX)
         }
 
         if(this.collect){
@@ -1393,6 +1459,7 @@ class NPC {
     }
 
     hit(){
+        zzfxP(hitSFX)
         this.dead = true
         console.log("NPC Dead")
     }
@@ -1457,11 +1524,13 @@ let minotaur = {
             if(circleRect(this.x+105,hY,70,this.target.x,this.target.y,this.target.width,this.target.height)){
                 //if(this.axeRotation == 0 && this.target.x+this.target.width > this.x+105){
                     this.swing = true
+                    zzfxP(swingSFX)
                     this.lastDir = "right"
                 //}
             }else if(circleRect(this.x-105+this.width,hY,70,this.target.x,this.target.y,this.target.width,this.target.height)){
                 //if( && this.target.x < this.x-105+this.width){
                     this.swing = true
+                    zzfxP(swingSFX)
                     this.lastDir = "left"
                 //}
             }
@@ -1514,7 +1583,9 @@ let minotaur = {
                 this.path = aStar([this.i,this.j],[this.target.i,this.target.j])
                 this.path.pop()
             }
+        }
 
+        if(this.path.length > 0 && this.dir == undefined){
             let nextTile = this.path[this.path.length-1]
 
             if(nextTile.j != this.j){
@@ -1696,7 +1767,7 @@ function cButtons(b){
     b.forEach(button => {
         if(click && transitionEvent == "!"){
             if(click.x > button.x && click.x < button.x+button.w && click.y > button.y && click.y < button.y+button.h){
-                
+                zzfxP(clickSFX)
                 if(button.a == "!"){
                     button.c = true
                     click = 0
@@ -2080,7 +2151,7 @@ function startGame(){
     },5000)
 
     setTimeout(()=>{
-        
+        zzfxP(wallSFX)
         minotaur.sleep = false
         shake(1000)
     },6000)
@@ -2446,6 +2517,10 @@ function drawText(t,x,y,scale,color,lw=15){
     ctx.restore()
 
 }
+
+
+
+
 
 //remove
 javascript:(function(){var script=document.createElement('script');script.onload=function(){var stats=new Stats();document.body.appendChild(stats.dom);requestAnimationFrame(function loop(){stats.update();requestAnimationFrame(loop)});};script.src='https://mrdoob.github.io/stats.js/build/stats.min.js';document.head.appendChild(script);})()
