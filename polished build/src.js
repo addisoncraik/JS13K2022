@@ -66,6 +66,7 @@ let map = {
 let menu = "m"
 
 let click = 0
+let mylatesttap;
 
 let sF = 1
 
@@ -87,7 +88,7 @@ let data = [
     {"d":"c #ffffff 1 1, w 6, r 8 8 45 80 0 1, a 31 67 13 0 360 0 1, a 31 30 10 0 360 0 1, a 31 67 5 0 360 1,","w":61,"h":96}, //Speaker On
     {"d":"w 6, c #d21414 0 1, p M0 0L61 96 fs,","w":61,"h":96}, //Speaker Off
     {"d":"c #be392c 0 1, w 15, p M64 0L32 30 s, c #e2574c 0 1, p M0 0L32 30 s, c #ec9d5d 1, a 32 44 19 0 360 1, c #bf7131 0 1, w 4, a 32 44 12 0 360 1 1,","w":64,"h":64}, //Medal
-    {"d":"c #525252 0 1, w 4, r 5 11 50 0 0 1, c #454545 1, a 22 11 7 0 360 1, r 5 32 50 0 0 1, a 41 32 7 0 360 1, r 7 53 50 0 0 1, a 30 53 7 0 360 1,","w":64,"h":64},//color wheel
+    {"d":"c white 1 1, w 4, r 5 11 50 0 0 1, a 22 11 7 0 360 1, r 5 32 50 0 0 1, a 41 32 7 0 360 1, r 7 53 50 0 0 1, a 30 53 7 0 360 1,","w":64,"h":64},//color wheel
     {"d":"c #000000 1 1, g 0.3, w 8, a 88 33 17 0 360 0 1, r 8 31 60 8 1, r 11 37 8 17 1, r 24 37 8 17 1,","w":120,"h":64},//key sillouette
     {"d":"c #bababa 1, p M27 0L18 7L18 375C18 375 25 354 27 327L36 7Z f, c #737373 1, p M9 0L18 7L18 375C18 375 11 354 9 327L0 7Z f,","w":36,"h":375}, //sword blade
     {"d":"c #954b33 1, p M13 112L0 94C0 94 4 90 26 84C49 80 57 80 58 80C90 84 112 90 116 94L 103 112C90 96 76 88 58 91C58 91 40 88 26 96 f, c #782c19 1, p M44 83 L 49 0 L 65 0 L 72 83 f, c #954b33 1, r 40 77 36 8 1,","w":116,"h":112}, //hilt
@@ -100,10 +101,10 @@ let data = [
 
 let alphabet = [
     {c:" ",d:"",w:100},
-    {c:"a",d:"M50 5L10 95L90 95Z",w:100},
+    {c:"a",d:"M50 10L10 90L90 90Z",w:100},
     {c:"b",d:"M10 0L10 100L60 70L18 50L60 30Z",w:70},
     {c:"c",d:"M85 32L55 0L10 50L55 100L85 67",w:95},
-    {c:"d",d:"M10 0L10 100L80 50Z",w:90},
+    {c:"d",d:"M10 7L11 93L70 47Z",w:75},
     {c:"e",d:"M80 10L10 10L50 50L10 95L80 90",w:90},
     {c:"f",d:"M70 0L20 4L20 100M60 43L10 49",w:90},
     {c:"g",d:"M83 30L55 0L10 50L55 100L85 60L49 60",w:100},
@@ -166,6 +167,8 @@ let mainMenu = {
     ],
     draw(){
 
+        drawMenuBG(0)
+
         draw(8,250,500,70/64)
         draw(9,380,500,70/64)
 
@@ -173,14 +176,22 @@ let mainMenu = {
 
         dButtons(this.buttons)
 
-        drawText("Play",250,350,0.3,"red")
-        drawText("Controls",250,400,0.3,"red")
-        drawText("Credits",250,450,0.3,"red")
-
-        drawText("Labyrinth",100,100,0.5,"red")
-        drawText("Of Death",150,170,0.5,"red")
+        drawText("Labyrinth",100,100,0.6,"white")
+        drawText("Of Death",150,170,0.6,"white")
     },
     update(){
+
+        if(eMenu.score != null){
+
+            scores.push({"s":eMenu.score,"n":eMenu.initials})
+
+            scores = scores.sort((a,b)=>(a.s < b.s) ? 1 : -1)
+
+            localStorage.setItem("LOD_SCORES",JSON.stringify(scores))
+
+            eMenu.score = null
+        }
+
         cButtons(this.buttons)
         //test
     },
@@ -206,15 +217,46 @@ let hsMenu = {
         {t:"reset",x:425,y:600,w:200,h:30,a:"!"}
     ],
     draw(){
-        ctx.fillText("Highscores", 200, 20)
+        drawMenuBG(0)
+
+        drawText("Highscores",100,100,0.6,"white")
+
+
 
         for(let i =0; i<scores.length; i++){
-            ctx.fillText(scores[i],200,200+i*50)
+
+            ctx.save()
+            ctx.translate(100,200+70*i)
+            drawText(alphabet[scores[i].n[0]].c,456,0,0.6,"white")
+            drawText(alphabet[scores[i].n[1]].c,393,0,0.6,"white")
+            drawText(alphabet[scores[i].n[2]].c,330,0,0.6,"white")
+
+            drawText(scores[i].s+"",0,0,0.6,"white")
+            ctx.restore()
         }
 
         dButtons(this.buttons)
     },
     update(){
+        if(eMenu.score != null){
+
+            scores.push({"s":eMenu.score,"n":eMenu.initials})
+
+            scores = scores.sort((a,b)=>(a.s < b.s) ? 1 : -1)
+
+            localStorage.setItem("LOD_SCORES",JSON.stringify(scores))
+
+            eMenu.score = null
+        }
+
+        if(this.buttons[1].c){
+            scores = []
+
+            localStorage.setItem("LOD_SCORES",JSON.stringify(scores))
+
+            this.buttons[1].c = false
+        }
+
         cButtons(this.buttons)
     },
 }
@@ -265,22 +307,44 @@ let pMenu = {
 
 let eMenu = {
     buttons:[
-        {t:"Highscores",x:75,y:600,w:200,h:30,a:"hs"},
-        {t:"Main Menu",x:425,y:600,w:200,h:30,a:"m"}
+        {t:"",x:556,y:420,w:60,h:60,a:"!",c:false},
+        {t:"",x:493,y:420,w:60,h:60,a:"!",c:false},
+        {t:"",x:430,y:420,w:60,h:60,a:"!",c:false},
+        {t:"Menu",x:119,y:600,w:112,h:30,a:"m"},
+        {t:"Highscores",x:405,y:600,w:268,h:30,a:"hs"}
     ],
+    initials:[1,1,1],
     score:null,
     draw(){
-        if(player.dead){
-            ctx.fillText("You Lose", 200, 20)
-        }else{
-            ctx.fillText("You Win", 200, 20)
-        }
-        
-        ctx.fillText(this.score, 200, 300)
+        drawText("Game Over",90,180,0.6,"white")
+
+        drawText("Score",116,360,0.3,"white")
+        drawText(this.score+"",60,420,0.6,"white")
+
+        drawText("name",470,360,0.3,"white")
+        drawText(alphabet[this.initials[0]].c,556,420,0.6,"white")
+        drawText(alphabet[this.initials[1]].c,493,420,0.6,"white")
+        drawText(alphabet[this.initials[2]].c,430,420,0.6,"white")
+
+        ctx.fillStyle = "white"
+        ctx.fillRect(556,485,60,5)
+        ctx.fillRect(493,485,60,5)
+        ctx.fillRect(430,485,60,5)
 
         dButtons(this.buttons)
     },
     update(){
+        for(let i = 0; i<this.initials.length; i++){
+            if(this.buttons[i].c){
+                this.initials[i] ++
+                this.buttons[i].c = false
+            }
+            if(this.initials[i] > 26){
+                this.initials[i] = 0
+            }
+        }
+
+
         if(this.score == null){
             this.score = calculateScore()
         }
@@ -304,20 +368,7 @@ let ccMenu = {
 
     draw(){
 
-        ctx.fillStyle = "gray"
-        ctx.fillRect(0,400,700,300)
-
-        draw(2,30,400)
-        draw(3,500,500)
-
-        for(let i = 0; i < 700; i+= 88){
-            draw(5,i,30,2)
-        }
-        
-        ctx.fillStyle = "black"
-        ctx.globalAlpha = 0.3
-        ctx.fillRect(0,0,700,700)
-        ctx.globalAlpha = 1
+        drawMenuBG(0)
 
         ctx.lineWidth = 4
         ctx.fillStyle = featherColors[this.fC]
@@ -328,7 +379,6 @@ let ccMenu = {
         ctx.fillRect(120,440,70,70)
         
         drawCharacter(310,250,"left",this.offset,this.fC,this.aC,this.sC,0,0,0,2)
-
 
         dButtons(this.buttons)
     },
@@ -424,20 +474,39 @@ window.onload = () => {
 v.addEventListener("mousedown",inputStart)
 v.addEventListener("mouseup",inputEnd)
 
+v.addEventListener("touchstart",inputStart)
+v.addEventListener("touchend",inputEnd)
+
 window.addEventListener("keydown",keyDown)
 window.addEventListener("keyup",keyUp)
 
+
+
+
 function inputEnd(){
     click = 0;
+
+    player.right = player.left = player.down = player.up = player.attack = false;
 }
 
 function inputStart(e){
     e.preventDefault()
+
     if(e.which == 1 || e.which == 0){
         click = {
-        x:(e.clientX-v.getBoundingClientRect().left)/sF,
-        y:(e.clientY-v.getBoundingClientRect().top)/sF
+        x:(e.clientX-v.getBoundingClientRect().left || e.touches[0].clientX-v.getBoundingClientRect().left)/sF,
+        y:(e.clientY-v.getBoundingClientRect().top || e.touches[0].clientY-v.getBoundingClientRect().top)/sF
         };
+
+        var now = new Date().getTime();
+
+        var timesince = now - mylatesttap;
+
+        if((timesince < 600) && (timesince > 0)){
+            player.attack = true
+        }
+
+        mylatesttap = new Date().getTime();
     }
 }
 
@@ -457,6 +526,14 @@ function keyDown (event) {
     if (event.keyCode == 32){
         player.attack = true;
     }
+    if (event.keyCode == 80){
+        if(menu == "p"){
+            menu = ""
+        }
+        if(menu == ""){
+            menu = "p";
+        }
+    }
 }
 
 function keyUp(event) {
@@ -474,6 +551,9 @@ function keyUp(event) {
     }
     if (event.keyCode == 32){
         player.attack = false;
+    }
+    if(event.keyCode == 80){
+        
     }
 }
 
@@ -525,9 +605,11 @@ function gameLoop(){
             break;
     }
 
-    draw(6,50,50,0.5)
-    if(mute){
-        draw(7,50,50,0.5)
+    if(menu != ""){
+        draw(6,50,50,0.5)
+        if(mute){
+            draw(7,50,50,0.5)
+        }
     }
 
     if(transitionEvent != "!"){
@@ -548,7 +630,7 @@ function gameLoop(){
     ctx.restore()
 
 
-    if(click){
+    if(click && menu != ""){
         if(click.x > 50 && click.y > 50 && click.x < 80.5 && click.y < 98){
             mute = !mute
             if(mute && songNode){
@@ -769,7 +851,7 @@ class Cell{
         for (let i = 0; i<this.edges.length;i++) {
             if (this.edges[i]) {
                 if(i != this.exit || !this.open){
-                    this.collision(player, i)
+                    //this.collision(player, i)
                 }
             }
         }
@@ -893,7 +975,11 @@ class Cell{
         for (let i = 0; i<this.edges.length;i++) {
             if (this.edges[i]) {
                 if(isInBounds(this.wallP[i][0],this.wallP[i][1]-145,this.wallD[i%2][0],this.wallD[i%2][1]+145)){
-                    walls.push({y:this.wallP[i][1]+this.wallD[i%2][1],t:"w",i:this.i,j:this.j,e:i})
+                    let y = this.wallP[i][1]+this.wallD[i%2][1]
+                    if(this.j == 19 && i == 2){
+                        y+=300
+                    }
+                    walls.push({y:y,t:"w",i:this.i,j:this.j,e:i})
                 }
             }
         }
@@ -960,6 +1046,14 @@ let player = {
         drawCharacter(this.cX,this.cY,this.lastDir,this.offset,this.fC,this.aC,this.sC,this.legRotation,this.armRotation,1)
     },
     move () {
+
+        if(click){
+            if(click.x > 500) this.right = 1
+            if(click.y > 500) this.down = 1
+
+            if(click.x < 200) this.left = 1
+            if(click.y < 200) this.up = 1
+        }
 
         this.oldX = this.x;// Set the old position to the current position
         this.oldY = this.y;// before we update the current position, thus making it current
@@ -1097,6 +1191,9 @@ class Sword{
             }
 
             if(player.attack && this.swing && swords[0].collect && swords[1].collect && swords[2].collect){
+                if(this.rotate == 0){
+                    zzfxP(swingSFX)
+                }
                 this.rotate += 24
             }
 
@@ -1758,6 +1855,7 @@ function draw(imgIndex,posX,posY,scale=1){
 //draw buttons
 function dButtons(b){
     b.forEach(button => {
+        drawText(button.t,button.x,button.y,0.3,"white")
         ctx.strokeStyle = "red"
         ctx.strokeRect(button.x,button.y,button.w,button.h)
     });
@@ -2330,11 +2428,7 @@ function calculateScore(){
         score = 30000 - dNPCs*1000 + eNPCs*3000 - 10000*mH
     }
 
-    scores.push(score)
-
-    localStorage.setItem("LOD_SCORES",JSON.stringify(scores))
-
-    return score
+    return Math.floor(score)
 }
 //draws character
 function drawCharacter(x,y,lD,offset,fC,aC,sC,lR,aR,sword=false,scale=1){
@@ -2518,8 +2612,22 @@ function drawText(t,x,y,scale,color,lw=15){
 
 }
 
+function drawMenuBG(y){
+    ctx.fillStyle = "gray"
+    ctx.fillRect(0,400,700,300)
 
+    draw(2,30,400)
+    draw(3,500,500)
 
+    for(let i = 0; i < 700; i+= 88){
+        draw(5,i,30,2)
+    }
+    
+    ctx.fillStyle = "black"
+    ctx.globalAlpha = 0.3
+    ctx.fillRect(0,0,700,700)
+    ctx.globalAlpha = 1
+}
 
 
 //remove
