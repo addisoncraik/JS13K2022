@@ -273,18 +273,18 @@ let hsMenu = {
     draw(){
         drawMenuBG(0)
 
-        drawText("Highscores",80,150,0.6)
+        drawText("Highscores",80,130,0.6)
 
 
 
         for(let i =0; i<scores.length; i++){
 
-            if(i > 5){
-                break
+            if(i > 4){
+                break;
             }
 
             ctx.save()
-            ctx.translate(100,260+70*i)
+            ctx.translate(100,230+70*i)
             drawText(alphabet[scores[i].n[0]].c,416,0,0.4)
             drawText(alphabet[scores[i].n[1]].c,373,0,0.4)
             drawText(alphabet[scores[i].n[2]].c,330,0,0.4)
@@ -1691,7 +1691,7 @@ let minotaur = {
     width: 80,
     height: 250,
 
-    health: 100,
+    health: 60,
     canTakeDmg: true,
 
     dir:undefined,
@@ -1722,7 +1722,9 @@ let minotaur = {
 
     draw () {
         if(this.health > 0){
+            ctx.fillStyle = "red"
             drawMinotaur(map.x+this.x,map.y+this.y,this.lastDir,this.offset,this.legRotation,this.axeRotation,this.sleep)
+            ctx.fillRect(map.x+this.x-20,map.y+this.y-20,(this.health/60) * 80,10)
         }
     },
     axeSwing(){
