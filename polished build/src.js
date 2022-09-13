@@ -1486,8 +1486,9 @@ let key = {
     draw(){
         if(this.collect){
             draw(13,this.x,this.y,0.3)
+        }else{
+            draw(13,this.x+map.x,this.y+map.y,0.3)
         }
-        draw(13,this.x+map.x,this.y+map.y,0.3)
     },
 
     collision(){
