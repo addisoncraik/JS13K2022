@@ -89,9 +89,11 @@ let data = [
     {"d":"w 6, c #d21414 0 1, p fs M0 0L61 96,","w":61,"h":96}, //Speaker Off
     {"d":"c #be392c 0 1, w 15, p s M64 0L32 30, c #e2574c 0 1, p s M0 0L32 30, c #ec9d5d 1, a 32 44 19 0 360 1, c #bf7131 0 1, w 4, a 32 44 12 0 360 1 1,","w":64,"h":64}, //Medal
     {"d":"c white 1 1, w 4, r 5 11 50 0 0 1, a 22 11 7 0 360 1, r 5 32 50 0 0 1, a 41 32 7 0 360 1, r 7 53 50 0 0 1, a 30 53 7 0 360 1,","w":64,"h":64},//color wheel
+    {"d":"c #4d4d4d 1, r 0 58 45 14 1, r 0 122 45 14 1, c #363636 1, r 15 0 15 175 1,","w":45,"h":175},//gate (horizontal)
     {"d":"c #000000 1 1, g 0.3, w 8, a 88 33 17 0 360 0 1, r 8 31 60 8 1, r 11 37 8 17 1, r 24 37 8 17 1,","w":120,"h":64},//key sillouette
+    {"d":"c #a47e3c 1, r 0 0 60 60 1, c #62491c 1, a 30 25 14 0 360 1, r 24 19 12 31 1,","w":60,"h":60},//lock
     {"d":"c #6a4c22 1, r 234 66 130 65 1, r 0 53 235 22 1, r 0 66 26 61 1, r 51 66 26 61 1, c #9e7a3b 1, r 0 44 236 22 1, r 0 61 18 57 1, r 52 61 18 57 1, r 235 1 130 69 1, c #5c1a0f 1, r 257 23 85 85 1,","w":364,"h":127}, //key
-    {"d":"c #ffffff 1 1, w 8, a 36 36 32 180 360 0 1, a 36 86 32 0 180 0 1, c #ffffff 1, r 64 36 8 50 1, r 0 36 8 50 1, r 32 29 8 32 1,","w":72,"h":122}, //Mouse
+    {"d":"c #62491c 1 1, w 8, a 36 36 32 180 360 0 1, a 36 86 32 0 180 0 1, r 64 36 8 50 1, r 0 36 8 50 1, r 32 29 8 32 1,","w":72,"h":122}, //Mouse
     {"d":"c #8f8f8f 1, c #6b6b6b 0 1, w 10, p fs M5 54C5 54 27 6 82 6C137 6 160 54 160 54L160 246L5 246L5 54Z, c #6b6b6b 1, r 35 78 94 61 1, r 53 134 61 40 1, c #8f8f8f 1, r 48 96 26 25 1, r 53 150 61 12 1, r 76 128 12 12 1, r 90 97 26 25 1,","w":165,"h":251}, //grave
     {"d":"c #bababa 1, p f M27 0L18 7L18 375C18 375 25 354 27 327L36 7Z, c #737373 1, p f M9 0L18 7L18 375C18 375 11 354 9 327L0 7Z,","w":36,"h":375}, //sword blade
     {"d":"c #954b33 1, p f M13 112L0 94C0 94 4 90 26 84C49 80 57 80 58 80C90 84 112 90 116 94L 103 112C90 96 76 88 58 91C58 91 40 88 26 96, c #782c19 1, p f M44 83 L 49 0 L 65 0 L 72 83, c #954b33 1, r 40 77 36 8 1,","w":116,"h":112}, //hilt
@@ -170,7 +172,30 @@ let mainMenu = {
     ],
     draw(){
 
-        drawMenuBG(0)
+        ctx.fillStyle = "gray"
+        ctx.fillRect(0,400,700,300)
+
+        draw(2,30,400)
+        draw(3,500,500)
+
+        for(let i = 0; i < 700; i+= 88){
+            draw(5,i,30,2)
+        }
+        
+        // ctx.fillStyle = "black"
+        // ctx.globalAlpha = 0.3
+        // ctx.fillRect(0,0,700,700)
+        // ctx.globalAlpha = 1
+
+
+        drawGrave(70,320)
+        drawGrave(250,350)
+        drawGrave(150,500)
+        drawGrave(400,460)
+        drawGrave(550,400)
+
+        ctx.fillStyle = "#00000099"
+        ctx.fillRect(0,0,700,700)
 
         draw(8,250,500,70/64)
         draw(9,380,500,70/64)
@@ -179,10 +204,12 @@ let mainMenu = {
 
         dButtons(this.buttons)
 
-        drawText("Labyrinth",100,150,0.6)
-        drawText("Of Death",150,220,0.6)
+        drawText("Labyrinth",70,130,0.6)
+        drawText("Of Death",190,230,0.6)
     },
     update(){
+
+        bsMenu.state = 0
 
         if(eMenu.score != null){
 
@@ -202,58 +229,62 @@ let mainMenu = {
 
 let htpMenu = {
     buttons:[
-        {t:"back",x:300,y:600,w:100,h:30,a:"m"}
+        {t:"back",x:300,y:570,w:100,h:30,a:"m"}
     ],
     draw(){
 
-        drawText("Move with",150,100,0.5)
+        drawMenuBG()
+
+        let bt = "#62491c"
+
+        drawText("Move with",150,100,0.5,bt)
 
         ctx.save()
         ctx.translate(55,190)
-        drawText("W",50,0,0.4)
-        drawText("A",0,50,0.4)
-        drawText("S",50,50,0.4)
-        drawText("D",100,50,0.4)
+        drawText("W",50,0,0.4,bt)
+        drawText("A",0,50,0.4,bt)
+        drawText("S",50,50,0.4,bt)
+        drawText("D",100,50,0.4,bt)
         ctx.restore()
 
         ctx.save()
         ctx.translate(230,190)
-        drawText("Z",50,0,0.4)
-        drawText("Q",0,50,0.4)
-        drawText("S",50,50,0.4)
-        drawText("D",100,50,0.4)
+        drawText("Z",50,0,0.4,bt)
+        drawText("Q",0,50,0.4,bt)
+        drawText("S",50,50,0.4,bt)
+        drawText("D",100,50,0.4,bt)
         ctx.restore()
 
         ctx.save()
         ctx.translate(405,190)
 
-        drawText("D",50,40,0.4,"#ffffff",-90)
-        drawText("D",40,90,0.4,"#ffffff",180)
-        drawText("D",90,55,0.4,"#ffffff",90)
+        drawText("D",50,40,0.4,bt,-90)
+        drawText("D",40,90,0.4,bt,180)
+        drawText("D",90,55,0.4,bt,90)
 
-        drawText("D",100,50,0.4)
+        drawText("D",100,50,0.4,bt)
         ctx.restore()
 
         ctx.save()
         ctx.translate(580,200)
-        draw(12,0,0,0.8)
+        draw(14,0,0,0.8)
         ctx.restore()
 
-        drawText("Attack with",95,350,0.5)
+        drawText("Attack with",95,350,0.5,bt)
 
         ctx.save()
         ctx.translate(145,470)
-        ctx.strokeStyle = "#ffffff"
+        ctx.strokeStyle = bt
         ctx.lineWidth = 7
         ctx.strokeRect(0,0,200,50)
-        drawText("Space",32,10,0.3)
+        drawText("Space",32,10,0.3,bt)
         ctx.restore()
 
         ctx.save()
         ctx.translate(440,440)
-        draw(12,0,0,0.8)
-        drawText("x",70,40,0.2)
-        drawText("2",90,32,0.3)
+        draw(14,0,0,0.8)
+        drawText("x",70,40,0.2,bt)
+        drawText("2",90,32,0.3,bt)
         ctx.restore()
 
 
@@ -267,13 +298,15 @@ let htpMenu = {
 
 let hsMenu = {
     buttons:[
-        {t:"back",x:125,y:600,w:100,h:30,a:"m"},
-        {t:"reset",x:464,y:600,w:122,h:30,a:"!"}
+        {t:"back",x:125,y:570,w:100,h:30,a:"m"},
+        {t:"reset",x:464,y:570,w:122,h:30,a:"!"}
     ],
     draw(){
-        drawMenuBG(0)
+        drawMenuBG()
 
-        drawText("Highscores",80,130,0.6)
+        let bt = "#62491c"
+
+        drawText("Highscores",80,110,0.6,bt)
 
 
 
@@ -284,12 +317,12 @@ let hsMenu = {
             }
 
             ctx.save()
-            ctx.translate(100,230+70*i)
-            drawText(alphabet[scores[i].n[0]].c,416,0,0.4)
-            drawText(alphabet[scores[i].n[1]].c,373,0,0.4)
-            drawText(alphabet[scores[i].n[2]].c,330,0,0.4)
+            ctx.translate(100,210+70*i)
+            drawText(alphabet[scores[i].n[0]].c,416,0,0.4,bt)
+            drawText(alphabet[scores[i].n[1]].c,373,0,0.4,bt)
+            drawText(alphabet[scores[i].n[2]].c,330,0,0.4,bt)
 
-            drawText(scores[i].s+"",30,0,0.4)
+            drawText(scores[i].s+"",30,0,0.4,bt)
             ctx.restore()
         }
 
@@ -321,24 +354,30 @@ let hsMenu = {
 
 let cMenu = {
     buttons:[
-        {t:"back",x:300,y:600,w:100,h:30,a:"m"}
+        {t:"back",x:300,y:570,w:100,h:30,a:"m"}
     ],
     draw(){
-        drawText("Credits",170,80,0.6)
+        
+        drawMenuBG()
 
-        drawText("Coding",50,200,0.4,"#f2165b")
-        drawText("Nathan Yang",50,280,0.2)
-        drawText("Addison Craik",35,330,0.2)
+        let bt = "#62491c"
+
+        drawText("Credits",170,100,0.6,bt)
+
+        drawText("Coding",50,210,0.4,bt)
+        drawText("Nathan Yang",50,280,0.2,bt)
+        drawText("Addison Craik",40,320,0.2,bt)
 
 
-        drawText("ArtWork",410,200,0.4,"#00dac5")
-        drawText("Madison Doucette",380,280,0.2)
+        drawText("ArtWork",410,210,0.4,bt)
+        drawText("Madison Doucette",380,280,0.2,bt)
 
-        drawText("Music",50,400,0.4,"#ffaa01")
-        drawText("Aidan Webb",50,480,0.2)
+        drawText("Music",65,400,0.4,bt)
+        drawText("Aidan Webb",65,470,0.2,bt)
 
-        drawText("Testing",410,400,0.4,"#680cb8")
-
+        drawText("Testing",410,400,0.4,bt)
+        drawText("James Evans",425,470,0.2,bt)
+        drawText("Trevor Cuff",430,510,0.2,bt)
 
         dButtons(this.buttons)
     },
@@ -348,23 +387,44 @@ let cMenu = {
 }
 
 let bsMenu = {
+    state: 0,
     draw(){
-        drawText("You have been trapped in", 10, 150, 0.3)
-        drawText("The Labyrinth of death.", 10, 200, 0.3)
 
-        drawText("unlock the gates or slay", 10, 280, 0.3)
-        drawText("the minotaur before he", 10, 330, 0.3)
-        drawText("brings death upon", 10,380,0.3)
-        drawText("everyone.", 10,430,0.3)
+        drawMenuBG()
 
-        drawText("Click to continue", 10,510,0.3)
+        let bt = "#62491c"
+
+        if(this.state == 0){
+            drawText("You have been trapped in", 20, 150, 0.3, bt)
+            drawText("The Labyrinth of death.", 20, 200, 0.3, bt)
+
+            drawText("unlock the gates or build", 20, 280, 0.3, bt)
+            drawText("a sword and slay the", 20, 330, 0.3, bt)
+            drawText("minotaur before he brings", 20,380,0.3, bt)
+            drawText("death upon everyone.", 20,430,0.3, bt)
+            drawText("Click to continue", 20,510,0.3, bt)
+        }else{
+            drawText("There are 3 parts to the", 20, 130, 0.3, bt)
+            drawText("sword you may only", 20, 180, 0.3, bt)
+            drawText("attack after collecting", 20,230,0.3, bt)
+            drawText("all three parts.", 20,280,0.3, bt)
+
+            drawText("After escaping the maze", 20, 360, 0.3, bt)
+            drawText("white bar will appear if", 20,410,0.3, bt)
+            drawText("it fills entirely you win.", 20,460,0.3, bt)
+            drawText("Click to continue", 20,530,0.3, bt)
+        }
     },
     update(){
         if(click){
-            zzfxP(clickSFX)
-            click = false
-            startGame()
-            //start game
+            if(this.state == 1){
+                click = false
+                zzfxP(clickSFX)
+                startGame()
+            }else{
+                click = false
+                this.state ++
+            }
         }
     },
 }
@@ -436,9 +496,9 @@ let eMenu = {
 let ccMenu = {
     buttons:[
         {t:"Back",x:300,y:600,w:100,h:30,a:"m"},
-        {t:"",x:120,y:250,w:70,h:70,a:"!",c:false},
-        {t:"",x:120,y:345,w:70,h:70,a:"!",c:false},
-        {t:"",x:120,y:440,w:70,h:70,a:"!",c:false}
+        {t:"",x:210,y:250,w:70,h:70,a:"!",c:false},
+        {t:"",x:210,y:345,w:70,h:70,a:"!",c:false},
+        {t:"",x:210,y:440,w:70,h:70,a:"!",c:false}
     ],
     fC:0,
     sC:0,
@@ -449,17 +509,30 @@ let ccMenu = {
 
     draw(){
 
-        drawMenuBG(0)
+        ctx.fillStyle = "gray"
+        ctx.fillRect(0,400,700,300)
+
+        draw(2,30,400)
+        draw(3,500,500)
+
+        for(let i = 0; i < 700; i+= 88){
+            draw(5,i,30,2)
+        }
+        
+        ctx.fillStyle = "black"
+        ctx.globalAlpha = 0.3
+        ctx.fillRect(0,0,700,700)
+        ctx.globalAlpha = 1
 
         ctx.lineWidth = 4
         ctx.fillStyle = featherColors[this.fC]
-        ctx.fillRect(120,250,70,70)
+        ctx.fillRect(210,250,70,70)
         ctx.fillStyle = armourColors[this.aC][1]
-        ctx.fillRect(120,345,70,70)
+        ctx.fillRect(210,345,70,70)
         ctx.fillStyle = skinColors[this.sC]
-        ctx.fillRect(120,440,70,70)
+        ctx.fillRect(210,440,70,70)
         
-        drawCharacter(310,250,"left",this.offset,this.fC,this.aC,this.sC,0,0,0,0,2)
+        drawCharacter(400,250,"left",this.offset,this.fC,this.aC,this.sC,0,0,0,0,2)
 
         dButtons(this.buttons)
     },
@@ -567,7 +640,11 @@ window.addEventListener("keyup",keyUp)
 function inputEnd(){
     click = 0;
 
-    player.right = player.left = player.down = player.up = player.attack = false;
+    if(!player.attack){
+        player.right = player.left = player.down = player.up = false
+    }
+
+    player.attack = false;
 }
 
 function inputStart(e){
@@ -811,64 +888,89 @@ class Cell{
             
             if(this.exit == e){
 
+                if(!this.open){
+                    for(let i = this.wallP[e][0]-1; i < this.wallP[e][0]+w; i+=44){
+                        draw(10,map.x+i,y-145)
+                    }
+
+                    if(this.edges[1]){
+                        draw(12, x+(w-45)/2-30, y-75)
+                    }else{
+                        draw(12, x+w/2-30, y-75)
+                    }
+                }
+
                 ctx.fillStyle = "#621c10"
                 ctx.fillRect(x,y-145,w,this.j==19?h/5-3:h-3)
                 ctx.fillStyle = "#7a2d1a"
                 ctx.fillRect(x,y-145,w,this.j==19?h/5-15:h-15)
 
-                // if(this.edges[1]){
-                //     ctx.fillStyle = "#1a1a1a"
-                //     ctx.fillRect(x+w-45,y-107,45,300)
-                // }
 
-                draw(10,x+w/2-40,y-145,0.4)
+
+                draw(11,x+w/2-40,y-145,0.4)
 
                 if(e==2){
                     ctx.fillStyle = "#1a1a1a"
                     ctx.globalAlpha = this.alphaB
                     ctx.fillRect(x-2,y-107,w+4,300)
                 }
-                ctx.globalAlpha = 1
-                return
+            }else{
+                if(this.alphaT < 1 || this.alphaB < 1){
+                    ctx.fillStyle = "#3e3e3e"
+                    ctx.fillRect(x,y,w,this.j==19?h/5:h)
+                }
+    
+                if(e==0){
+                    ctx.globalAlpha = this.alphaT
+                }
+    
+                if(e==2){
+                    ctx.globalAlpha = this.alphaB
+                }
+    
+                for(let i = this.wallP[e][0]-1; i < this.wallP[e][0]+w; i+=44){
+                    draw(5,map.x+i,y-145)
+                }
+    
+                if(this.j == 19 && e==2){
+                    ctx.fillStyle = "#1a1a1a"
+                    ctx.fillRect(x-2,y-107,w+4,300)
+                }
             }
 
+            ctx.globalAlpha = 1
 
-            if(this.alphaT < 1 || this.alphaB < 1){
-                ctx.fillStyle = "#3e3e3e"
-                ctx.fillRect(x,y,w,this.j==19?h/5:h)
-            }
-
-            if(e==0){
-                ctx.globalAlpha = this.alphaT
-            }
-
-            if(e==2){
-                ctx.globalAlpha = this.alphaB
-            }
-
-            for(let i = this.wallP[e][0]-1; i < this.wallP[e][0]+w; i+=44){
-                draw(5,map.x+i,y-145)
-            }
-
-            if(this.j == 19 && e==2){
+            if(this.edges[1] && this.j == 19){
                 ctx.fillStyle = "#1a1a1a"
-                ctx.fillRect(x-2,y-107,w+4,300)
+                ctx.fillRect(x+w-46,y-107,47,300)
+            }
+
+            if(this.edges[3] && this.j == 19){
+                ctx.fillStyle = "#1a1a1a"
+                ctx.fillRect(x,y-107,45,300)
             }
         }else{
             ctx.fillStyle = "#7a2d1a"
 
             ctx.fillRect(x-1,y-145,w+2,h-15)
 
+            draw(5,x,y+h-190)
+
             if(this.exit == e){
 
                 ctx.save()
                 ctx.translate(x,y)
                 ctx.rotate(Math.PI/2)
-                draw(10,0,-38,0.4)
+                draw(11,0,-38,0.4)
                 ctx.restore()
-            }
 
-            draw(5,x,y+h-190)
+                ctx.fillStyle = "#a47e3c"
+                if(e == 3){
+                    ctx.fillRect(x+46,y+55,5,60)
+                }else{
+                    ctx.fillRect(x-6,y+55,5,60)
+                }
+            }
         }
 
         ctx.globalAlpha = 1
@@ -1100,7 +1202,7 @@ let player = {
     height: 140,
 
     acc: 0.5,
-    fric: 0.93,
+    fric: 0.90,
 
     attack: false,
     lastDir: "",
@@ -1332,12 +1434,12 @@ class Sword{
         
         if(this.component == 0){
             if(this.hbc){
-                draw(14,-18,30)
+                draw(16,-18,30)
             }else{
                 this.height = 147
                 ctx.save()
                 ctx.rotate(-.17)
-                draw(14,20,5)
+                draw(16,20,5)
                 ctx.restore()
                 ctx.shadowBlur = 0;
                 
@@ -1347,10 +1449,10 @@ class Sword{
         }
         if(this.component == 1){
             if(this.hbc){
-                draw(15, -58, -40)
+                draw(17, -58, -40)
             }else{
                 this.height = 49
-                draw(15,20,0)
+                draw(17,20,0)
                 ctx.shadowBlur = 0;
                 draw(0,0,40)
             }
@@ -1358,10 +1460,10 @@ class Sword{
         
         if(this.component == 2){
             if(this.hbc){
-                draw(16,-12,-65)
+                draw(18,-12,-65)
             }else{
                 this.height = 40
-                draw(16,50,0)
+                draw(18,50,0)
                 ctx.shadowBlur = 0;
                 draw(0,0,20)
             }
@@ -1383,9 +1485,9 @@ let key = {
 
     draw(){
         if(this.collect){
-            draw(11,this.x,this.y,0.3)
+            draw(13,this.x,this.y,0.3)
         }
-        draw(11,this.x+map.x,this.y+map.y,0.3)
+        draw(13,this.x+map.x,this.y+map.y,0.3)
     },
 
     collision(){
@@ -1637,8 +1739,6 @@ class NPC {
                     dir=dirs.length
                     this.escape = true
                     dirs.push(cells[this.i][this.j].exit)
-
-                    console.log("escaped")
                 }
 
                 switch(dirs[dir]){
@@ -1721,10 +1821,17 @@ let minotaur = {
     dead: false,
 
     draw () {
-        if(this.health > 0){
-            ctx.fillStyle = "red"
+        if(!this.dead){
+            ctx.fillStyle = "#631c0f"
             drawMinotaur(map.x+this.x,map.y+this.y,this.lastDir,this.offset,this.legRotation,this.axeRotation,this.sleep)
-            ctx.fillRect(map.x+this.x-20,map.y+this.y-20,(this.health/60) * 80,10)
+
+            if(!this.sleep){
+                ctx.fillRect(map.x+this.x-20,map.y+this.y-20,(this.health/60) * 120,10)
+            }
+        }else{
+            this.height = 103
+            this.width = 70
+            drawGrave(map.x+this.x,map.y+this.y,0.7)
         }
     },
     axeSwing(){
@@ -1856,6 +1963,14 @@ let minotaur = {
 
     move(){
 
+        if(this.dead){
+            return
+        }
+
+        if(this.health <= 0){
+            this.dead = true
+        }
+
         if(this.dir != undefined){
             this.legRotation += this.legVel
         }else{
@@ -1977,9 +2092,9 @@ function draw(imgIndex,posX,posY,scale=1){
 //draw buttons
 function dButtons(b){
     b.forEach(button => {
+        // ctx.fillStyle = "#00000059"
+        // ctx.fillRect(button.x-10,button.y-10,button.w+20,button.h+20)
         drawText(button.t,button.x,button.y,0.3)
-        // ctx.strokeStyle = "red"
-        // ctx.strokeRect(button.x,button.y,button.w,button.h)
     });
 }
 //collision for buttons
@@ -2324,7 +2439,7 @@ function startGame(){
     key.collect = false
 
     //minotaur stuff
-    minotaur.health = 100
+    minotaur.health = 60
     minotaur.i = minotaur.j = 10
     minotaur.target = player
     minotaur.path = []
@@ -2437,11 +2552,11 @@ function drawGame(){
         }
     }
 
-    draw(21,30,15,0.3)
+    draw(23,30,15,0.3)
     drawText("x",70,33,0.2)
     drawText(eNPCs+"",90,25,0.3)
 
-    draw(13,200,15,0.17)
+    draw(15,200,15,0.17)
     drawText("x",230,33,0.2)
     drawText(dNPCs+"",250,25,0.3)
 
@@ -2581,7 +2696,7 @@ function calculateScore(){
 
     let time = (gameStart - gameEnd)
 
-    let score = (1000000 - time - dNPCs*15000 + eNPCs*45000 - 30000*mH)*(1+pH)
+    let score = (1000000 - time - dNPCs*15000 + eNPCs*20000 - 30000*mH)*(0.5+pH)
 
     if(mH == 0){
         score *= 1.5
@@ -2600,7 +2715,7 @@ function drawCharacter(x,y,lD,offset,fC,aC,sC,lR,aR,sword=false,k=false,scale=1)
     }
     ctx.scale(scale,scale)
 
-    draw(20,0,30+offset,0.5)
+    draw(22,0,30+offset,0.5)
 
 
 
@@ -2615,20 +2730,20 @@ function drawCharacter(x,y,lD,offset,fC,aC,sC,lR,aR,sword=false,k=false,scale=1)
     ctx.translate(10,100)
     ctx.rotate(lR*(Math.PI/180))
 
-    draw(60+sC,-14,10,0.5)
+    draw(62+sC,-14,10,0.5)
     ctx.restore()
 
     ctx.save()
     ctx.translate(33,100)
     ctx.rotate(-lR*(Math.PI/180))
 
-    draw(60+sC,-17,10,0.5)
+    draw(62+sC,-17,10,0.5)
     ctx.restore()
 
 
 
-    draw(57+fC,0,30+offset,0.5)
-    draw(21+aC*12+fC*4+sC,0,-20-offset,0.5)
+    draw(59+fC,0,30+offset,0.5)
+    draw(23+aC*12+fC*4+sC,0,-20-offset,0.5)
 
     ctx.save()
     ctx.fillStyle = skinColors[sC]
@@ -2682,7 +2797,7 @@ function drawMinotaur(x,y,lD,offset,lR,aR,sleep=0,scale=1){
         ctx.rotate(20*(Math.PI/180))
         ctx.shadowBlur = 10
         ctx.shadowColor = "#0000001f"
-        draw(17,0,0,0.7)
+        draw(19,0,0,0.7)
         ctx.shadowBlur = 0
 
         ctx.fillRect(75,54,30,28)
@@ -2714,7 +2829,7 @@ function drawMinotaur(x,y,lD,offset,lR,aR,sleep=0,scale=1){
     ctx.translate(-50,190)
     ctx.rotate(lR*(Math.PI/180))
     ctx.fillRect(5,5,18,40)
-    draw(64,-14,40,0.8)
+    draw(66,-14,40,0.8)
     ctx.restore()
 
     ctx.save()
@@ -2722,13 +2837,13 @@ function drawMinotaur(x,y,lD,offset,lR,aR,sleep=0,scale=1){
     ctx.translate(-65,190)
     ctx.rotate(-lR*(Math.PI/180))
     ctx.fillRect(1,5,18,40)
-    draw(64,-17,40,0.8)
+    draw(66,-17,40,0.8)
     ctx.restore()
 
-    draw(18,-5,83-offset,0.75)
+    draw(20,-5,83-offset,0.75)
 
 
-    draw(17,-40,-40+offset,0.7)
+    draw(19,-40,-40+offset,0.7)
 
 
 
@@ -2738,7 +2853,7 @@ function drawMinotaur(x,y,lD,offset,lR,aR,sleep=0,scale=1){
     ctx.translate(-105,140)
     ctx.rotate(-aR*(Math.PI/180))
 
-    draw(19,-45,-140-offset,1.1)
+    draw(21,-45,-140-offset,1.1)
 
     ctx.fillRect(-15,-15,30,30)
     
@@ -2752,7 +2867,7 @@ function drawGrave(x,y,scale=1){
     ctx.translate(x,y)
     ctx.scale(scale,scale)
 
-    draw(13,10,0,0.5)
+    draw(15,10,0,0.5)
     draw(0,0,90,0.7)
 
     ctx.restore()
@@ -2788,19 +2903,12 @@ function drawText(t,x,y,scale,color="#ffffff",r=0){
 
 }
 
-function drawMenuBG(y){
-    ctx.fillStyle = "gray"
-    ctx.fillRect(0,400,700,300)
-
-    draw(2,30,400)
-    draw(3,500,500)
-
+function drawMenuBG(){
     for(let i = 0; i < 700; i+= 88){
-        draw(5,i,30,2)
+        draw(5,i,-85,2)
+        draw(5,i,535,2)
     }
-    
-    ctx.fillStyle = "black"
-    ctx.globalAlpha = 0.3
-    ctx.fillRect(0,0,700,700)
-    ctx.globalAlpha = 1
+
+    ctx.fillStyle = "#a47e3c"
+    ctx.fillRect(0,250,700,370)
 }
